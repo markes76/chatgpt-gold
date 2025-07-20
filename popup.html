@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChatGPT Gold</title>
+  <link rel="stylesheet" href="popup-styles.css">
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="popup-logo">
+        <div class="logo-icon">🏆</div>
+        <div class="logo-text">
+          <h1>ChatGPT Gold</h1>
+          <span class="version">v2.0.0</span>
+        </div>
+      </div>
+      <div class="popup-status">
+        <div class="status-indicator active"></div>
+        <span>Active</span>
+      </div>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📁</div>
+        <div class="stat-content">
+          <div class="stat-number" id="folders-count">-</div>
+          <div class="stat-label">Folders</div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">💬</div>
+        <div class="stat-content">
+          <div class="stat-number" id="conversations-count">-</div>
+          <div class="stat-label">Conversations</div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-content">
+          <div class="stat-number" id="prompts-count">-</div>
+          <div class="stat-label">Prompts</div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="action-btn primary" id="open-search">
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text">Advanced Search</span>
+      </button>
+      
+      <button class="action-btn secondary" id="open-settings">
+        <span class="btn-icon">⚙️</span>
+        <span class="btn-text">Settings</span>
+      </button>
+    </div>
+
+    <!-- Secondary Actions -->
+    <div class="secondary-actions">
+      <button class="action-btn-small" id="export-data">
+        <span class="btn-icon">📤</span>
+        Export
+      </button>
+      
+      <button class="action-btn-small" id="import-data">
+        <span class="btn-icon">📥</span>
+        Import
+      </button>
+      
+    </div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <div class="usage-summary">
+        <span id="usage-text">Active for <strong id="days-active">-</strong> days</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

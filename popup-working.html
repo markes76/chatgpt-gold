@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Gold</title>
+    <style>
+        body {
+            width: 320px;
+            min-height: 400px;
+            padding: 0;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #10a37f 0%, #0d8b6b 100%);
+            color: white;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .status-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .status-indicator.active {
+            background: #22c55e;
+            box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+        }
+
+        .status-indicator.inactive {
+            background: #ef4444;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .shortcuts {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 12px;
+        }
+
+        .shortcuts h4 {
+            margin: 0 0 10px 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .shortcut-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px 20px;
+            font-size: 12px;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ChatGPT Gold</h1>
+        <p>AI Workspace Enhancement</p>
+    </div>
+
+    <div class="content">
+        <div class="status-card">
+            <div class="status-row">
+                <span>Extension Status</span>
+                <div style="display: flex; align-items: center;">
+                    <span id="extensionStatus">Loading...</span>
+                    <div class="status-indicator" id="extensionIndicator"></div>
+                </div>
+            </div>
+            <div class="status-row">
+                <span>ChatGPT Page</span>
+                <div style="display: flex; align-items: center;">
+                    <span id="chatgptStatus">Checking...</span>
+                    <div class="status-indicator" id="chatgptIndicator"></div>
+                </div>
+            </div>
+            <div class="status-row">
+                <span>Sidebar</span>
+                <div style="display: flex; align-items: center;">
+                    <span id="sidebarStatus">Ready</span>
+                    <div class="status-indicator active" id="sidebarIndicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="action-btn" id="toggleSidebar">
+                <span>📁</span>
+                <span>Toggle Sidebar</span>
+            </button>
+            <button class="action-btn" id="openChatGPT">
+                <span>🚀</span>
+                <span>Open ChatGPT</span>
+            </button>
+            <button class="action-btn" id="openSettings">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </button>
+        </div>
+
+        <div class="shortcuts">
+            <h4>Keyboard Shortcuts</h4>
+            <div class="shortcut-row">
+                <span>Toggle Sidebar</span>
+                <span class="key">Ctrl+M</span>
+            </div>
+            <div class="shortcut-row">
+                <span>Quick Prompts</span>
+                <span class="key">Ctrl+/</span>
+            </div>
+            <div class="shortcut-row">
+                <span>Settings</span>
+                <span class="key">Ctrl+,</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Ready to enhance your ChatGPT experience!
+    </div>
+
+    <script src="popup-working.js"></script>
+</body>
+</html>

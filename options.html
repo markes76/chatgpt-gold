@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChatGPT Gold Settings</title>
+  <link rel="stylesheet" href="options-styles.css">
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Header -->
+    <div class="settings-header">
+      <div class="header-logo">
+        <div class="logo-icon">🏆</div>
+        <div class="logo-text">
+          <h1>ChatGPT Gold Settings</h1>
+          <span class="subtitle">Customize your AI workspace experience</span>
+        </div>
+      </div>
+      <div class="settings-status">
+        <div class="status-indicator active"></div>
+        <span>Extension Active</span>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn secondary" id="back-to-chatgpt">
+          Back to ChatGPT
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="settings-main">
+      <!-- Appearance Section -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2 class="card-title">🎨 Appearance Settings</h2>
+          <p class="card-description">Customize the look and feel of your ChatGPT Gold extension</p>
+        </div>
+        
+        <div class="card-content">
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Theme</h3>
+              <p>Choose your preferred color scheme</p>
+            </div>
+            <div class="setting-control">
+              <div class="theme-options">
+                <label class="theme-option">
+                  <input type="radio" name="theme" value="auto" checked>
+                  <div class="theme-preview auto">
+                    <div class="theme-circle light"></div>
+                    <div class="theme-circle dark"></div>
+                  </div>
+                  <span>Auto</span>
+                </label>
+                <label class="theme-option">
+                  <input type="radio" name="theme" value="light">
+                  <div class="theme-preview light">
+                    <div class="theme-circle light"></div>
+                  </div>
+                  <span>Light</span>
+                </label>
+                <label class="theme-option">
+                  <input type="radio" name="theme" value="dark">
+                  <div class="theme-preview dark">
+                    <div class="theme-circle dark"></div>
+                  </div>
+                  <span>Dark</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Primary Color</h3>
+              <p>Customize the main accent color</p>
+            </div>
+            <div class="setting-control">
+              <div class="color-options">
+                <button class="color-option active" data-color="#10a37f" style="background: #10a37f;" title="Default Green"></button>
+                <button class="color-option" data-color="#3b82f6" style="background: #3b82f6;" title="Blue"></button>
+                <button class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;" title="Purple"></button>
+                <button class="color-option" data-color="#f59e0b" style="background: #f59e0b;" title="Amber"></button>
+                <button class="color-option" data-color="#ef4444" style="background: #ef4444;" title="Red"></button>
+                <button class="color-option" data-color="#ec4899" style="background: #ec4899;" title="Pink"></button>
+                <button class="color-option" data-color="#06b6d4" style="background: #06b6d4;" title="Cyan"></button>
+                <button class="color-option" data-color="#84cc16" style="background: #84cc16;" title="Lime"></button>
+              </div>
+              <div class="custom-color-picker">
+                <label for="custom-color">Custom Color:</label>
+                <input type="color" id="custom-color" value="#10a37f">
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Sidebar</h3>
+              <p>Configure sidebar appearance and behavior</p>
+            </div>
+            <div class="setting-control">
+              <div class="checkbox-setting">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="sidebar-default-open" checked>
+                  <span class="checkmark"></span>
+                  Open sidebar by default for new conversations
+                </label>
+              </div>
+              <div class="slider-setting">
+                <label for="sidebar-width">Sidebar Width:</label>
+                <input type="range" id="sidebar-width" min="300" max="500" value="350" step="10">
+                <span class="slider-value">350px</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Extension Title</h3>
+              <p>Customize the extension header text</p>
+            </div>
+            <div class="setting-control">
+              <div class="text-setting">
+                <label for="extension-title">Extension Title:</label>
+                <input type="text" id="extension-title" value="ChatGPT Gold" class="text-input">
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>⌨️ Keyboard Shortcuts</h3>
+              <p>Fixed keyboard shortcuts for quick access to features</p>
+              <p><small><strong>Enhanced Native Search:</strong> Adds extension data to ChatGPT's search | <strong>Extension Search:</strong> Clean extension-only search interface</small></p>
+            </div>
+            <div class="setting-control">
+              <div class="shortcuts-list">
+                <div class="shortcut-item">
+                  <span class="shortcut-action">Toggle Sidebar</span>
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>M</kbd>
+                  </div>
+                </div>
+                <div class="shortcut-item">
+                  <span class="shortcut-action">Quick Prompts</span>
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>.</kbd>
+                  </div>
+                </div>
+                <div class="shortcut-item">
+                  <span class="shortcut-action">Enhanced Native Search</span>
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>K</kbd>
+                  </div>
+                </div>
+                <div class="shortcut-item">
+                  <span class="shortcut-action">Extension Search</span>
+                  <div class="shortcut-keys">
+                    <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>K</kbd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Behavior Section -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2 class="card-title">⚡ Behavior Settings</h2>
+          <p class="card-description">Configure how the extension behaves and responds</p>
+        </div>
+        
+        <div class="card-content">
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Search Behavior</h3>
+              <p>Configure search functionality</p>
+            </div>
+            <div class="setting-control">
+              <div class="checkbox-setting">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="search-content" checked>
+                  <span class="checkmark"></span>
+                  Search within conversation content
+                </label>
+              </div>
+              <div class="checkbox-setting">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="search-prompts" checked>
+                  <span class="checkmark"></span>
+                  Include prompts in search results
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Notifications</h3>
+              <p>Toast notification preferences</p>
+            </div>
+            <div class="setting-control">
+              <div class="checkbox-setting">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="show-notifications" checked>
+                  <span class="checkmark"></span>
+                  Show success notifications
+                </label>
+              </div>
+              <div class="slider-setting">
+                <label for="notification-duration">Notification Duration:</label>
+                <input type="range" id="notification-duration" min="1" max="10" value="3" step="1">
+                <span class="slider-value">3 seconds</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Backup & Sync Section -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2 class="card-title">💾 Backup & Sync</h2>
+          <p class="card-description">Manage your data and create backups</p>
+        </div>
+        
+        <div class="card-content">
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Export Data</h3>
+              <p>Download a backup of all your ChatGPT Gold data</p>
+            </div>
+            <div class="setting-control">
+              <button class="action-btn primary" id="export-all-data">
+                <span class="btn-icon">📤</span>
+                Export All Data
+              </button>
+              <p class="setting-help">Includes folders, conversations, prompts, and settings</p>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Import Data</h3>
+              <p>Restore data from a previous backup</p>
+            </div>
+            <div class="setting-control">
+              <button class="action-btn secondary" id="import-data">
+                <span class="btn-icon">📥</span>
+                Import Data
+              </button>
+              <p class="setting-help">Select a JSON file exported from ChatGPT Gold</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Advanced Section -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2 class="card-title">🔧 Advanced Settings</h2>
+          <p class="card-description">Performance tuning and developer options</p>
+        </div>
+        
+        <div class="card-content">
+
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>Data Management</h3>
+              <p>Dangerous operations - use with caution</p>
+            </div>
+            <div class="setting-control">
+              <button class="action-btn secondary" id="clear-all-data">
+                <span class="btn-icon">🗑️</span>
+                Clear All Data
+              </button>
+              <p class="setting-help warning">⚠️ This will permanently delete all your ChatGPT Gold data</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="settings-card">
+        <div class="card-header">
+          <h2 class="card-title">ℹ️ About ChatGPT Gold</h2>
+          <p class="card-description">Information about your extension</p>
+        </div>
+        
+        <div class="card-content">
+          <div class="about-card">
+            <div class="about-header">
+              <div class="about-icon">🏆</div>
+              <div class="about-info">
+                <h3>ChatGPT Gold</h3>
+                <p class="version">Version 2.0.0</p>
+              </div>
+            </div>
+            <div class="about-content">
+              <p>Transform your ChatGPT experience with advanced conversation management, prompt libraries, and powerful search capabilities.</p>
+              
+              <div class="feature-list">
+                <div class="feature-item">
+                  <span class="feature-icon">📁</span>
+                  <span>Organize conversations in folders</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">⚡</span>
+                  <span>Smart prompt library with variables</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🔍</span>
+                  <span>Advanced search capabilities</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🎨</span>
+                  <span>Customizable themes and colors</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">💾</span>
+                  <span>Data export and import</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="about-actions">
+              <button class="action-btn secondary" id="show-changelog">
+                <span class="btn-icon">📋</span>
+                View Changelog
+              </button>
+              <button class="action-btn secondary" id="reset-settings">
+                <span class="btn-icon">🔄</span>
+                Reset Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="save-indicator">
+      <span class="save-icon">✓</span>
+      Settings saved automatically
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+PLACEHOLDER ICONS
+
+The following icon files are needed for the extension to work properly:
+
+- icon16.png (16x16 pixels)
+- icon32.png (32x32 pixels) 
+- icon48.png (48x48 pixels)
+- icon128.png (128x128 pixels)
+
+For now, the extension will use Chrome's default icon until proper icons are created.
+
+To create proper icons:
+1. Design a gold/amber colored icon with ChatGPT green accents
+2. Use a chat bubble or AI enhancement symbol
+3. Export in PNG format with transparency
+4. Replace these placeholder references in manifest.json if needed
+
+The extension will still function without custom icons.

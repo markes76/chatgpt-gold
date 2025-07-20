@@ -1,0 +1,63 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Gold - AI Workspace",
+  "version": "2.0.8",
+  "description": "Transform ChatGPT into a full-featured AI workspace with enhanced UI, conversation management, prompt library, and advanced tools.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "downloads",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://chatgpt.com/*",
+    "*://*.chatgpt.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://*.chatgpt.com/*"
+      ],
+      "js": [
+        "folder-manager.js",
+        "prompt-manager.js", 
+        "cmdk-enhancer.js",
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ChatGPT Gold"
+  },
+  "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline';"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*.png"
+      ],
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://*.chatgpt.com/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
