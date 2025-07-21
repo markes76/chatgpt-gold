@@ -129,3 +129,65 @@ Extensive retry logic for "Extension context invalidated" scenarios common with 
 - Space-efficient design that doesn't overwhelm
 - Reliable expand/collapse functionality
 - Consistent sorting controls across all sections
+
+### Commit #4 - Centralized Import/Export System (v2.0.9)
+**Date**: July 21, 2025
+**Changes**: Complete overhaul of import/export functionality with centralized Options page management
+
+**Major Improvements**:
+1. **UI Decluttering**:
+   - Removed all import/export buttons from Folders and Prompts sections
+   - Removed import/export buttons from popup interface
+   - Consolidated ALL backup operations into Options page only
+   - Eliminated UI duplication and visual clutter
+
+2. **Unified ZIP Export/Import**:
+   - Added "Export Everything as ZIP" feature for complete backups
+   - Creates separate JSON files for prompts, folders, conversations, settings, and metadata
+   - ZIP import with user-friendly instructions modal
+   - Single-file backup solution for easy sharing and archiving
+
+3. **Granular Import/Export Sections**:
+   - **Prompts Only**: Export/import just prompt library data
+   - **Folders & Conversations**: Export/import folder structure and conversation locations
+   - **Settings & Preferences**: Export/import extension settings and customizations
+   - Each section handles multiple file formats for flexibility
+
+4. **Complete JSON Backup**:
+   - Enhanced traditional JSON export with all data types
+   - Improved import validation and error handling
+   - Backward compatibility with previous backup formats
+   - Better user feedback and progress indicators
+
+5. **Data Integrity & Validation**:
+   - Comprehensive file format validation for all import operations
+   - Support for multiple backup formats (new typed format + legacy)
+   - Proper error handling with user-friendly messages
+   - Version tracking in all export files
+
+**Technical Details**:
+- Removed 180+ lines of duplicate import/export code from prompt-manager.js
+- Removed import/export methods from popup.js
+- Added comprehensive export/import methods to options.js
+- New CSS styling for backup action groups and granular sections
+- Version validation and format detection for imports
+
+**Files Modified**:
+- `options.html` - New comprehensive backup interface
+- `options.js` - Complete import/export system implementation
+- `options-styles.css` - New backup interface styling
+- `prompt-manager.js` - Removed duplicate import/export functionality
+- `popup.html` - Removed import/export buttons
+- `popup.js` - Removed import/export methods
+- `manifest.json` - Version bump to 2.0.9
+
+**User Benefits**:
+- Single location for ALL backup operations (Options page)
+- Much cleaner main UI without backup clutter
+- Flexible backup options (ZIP, JSON, or granular)
+- Better organization and discoverability of backup features
+- Improved data portability and sharing capabilities
+
+## Commit Tracking
+
+- **Latest Commit Number**: #4

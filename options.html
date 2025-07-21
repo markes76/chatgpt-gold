@@ -224,36 +224,109 @@
       <!-- Backup & Sync Section -->
       <div class="settings-card">
         <div class="card-header">
-          <h2 class="card-title">💾 Backup & Sync</h2>
-          <p class="card-description">Manage your data and create backups</p>
+          <h2 class="card-title">💾 Backup & Data Management</h2>
+          <p class="card-description">Comprehensive import/export tools for all your ChatGPT Gold data</p>
         </div>
         
         <div class="card-content">
+          <!-- Unified ZIP Export/Import -->
           <div class="setting-group">
             <div class="setting-header">
-              <h3>Export Data</h3>
-              <p>Download a backup of all your ChatGPT Gold data</p>
+              <h3>🗜️ Unified Backup (ZIP)</h3>
+              <p>Complete backup and restore with all data in a single ZIP file</p>
             </div>
             <div class="setting-control">
-              <button class="action-btn primary" id="export-all-data">
-                <span class="btn-icon">📤</span>
-                Export All Data
-              </button>
-              <p class="setting-help">Includes folders, conversations, prompts, and settings</p>
+              <div class="backup-actions">
+                <button class="action-btn primary" id="export-zip">
+                  <span class="btn-icon">📦</span>
+                  Export Everything as ZIP
+                </button>
+                <button class="action-btn secondary" id="import-zip">
+                  <span class="btn-icon">📦</span>
+                  Import from ZIP
+                </button>
+              </div>
+              <p class="setting-help">Includes all prompts, folders, conversations, and settings in one file</p>
             </div>
           </div>
 
+          <!-- Complete JSON Backup -->
           <div class="setting-group">
             <div class="setting-header">
-              <h3>Import Data</h3>
-              <p>Restore data from a previous backup</p>
+              <h3>📄 Complete JSON Backup</h3>
+              <p>Single JSON file with all your ChatGPT Gold data</p>
             </div>
             <div class="setting-control">
-              <button class="action-btn secondary" id="import-data">
-                <span class="btn-icon">📥</span>
-                Import Data
-              </button>
-              <p class="setting-help">Select a JSON file exported from ChatGPT Gold</p>
+              <div class="backup-actions">
+                <button class="action-btn primary" id="export-all-data">
+                  <span class="btn-icon">📤</span>
+                  Export All Data
+                </button>
+                <button class="action-btn secondary" id="import-data">
+                  <span class="btn-icon">📥</span>
+                  Import All Data
+                </button>
+              </div>
+              <p class="setting-help">Traditional JSON format for all data</p>
+            </div>
+          </div>
+
+          <!-- Granular Import/Export -->
+          <div class="setting-group">
+            <div class="setting-header">
+              <h3>🎯 Granular Import/Export</h3>
+              <p>Import or export specific types of data</p>
+            </div>
+            <div class="setting-control">
+              
+              <!-- Prompts Only -->
+              <div class="granular-section">
+                <h4>⚡ Prompts Only</h4>
+                <div class="backup-actions">
+                  <button class="action-btn-small primary" id="export-prompts-only">
+                    <span class="btn-icon">📤</span>
+                    Export Prompts
+                  </button>
+                  <button class="action-btn-small secondary" id="import-prompts-only">
+                    <span class="btn-icon">📥</span>
+                    Import Prompts
+                  </button>
+                </div>
+                <p class="granular-help">Export/import just your prompt library</p>
+              </div>
+
+              <!-- Folders & Conversations -->
+              <div class="granular-section">
+                <h4>📁 Folders & Conversations</h4>
+                <div class="backup-actions">
+                  <button class="action-btn-small primary" id="export-folders-only">
+                    <span class="btn-icon">📤</span>
+                    Export Folders
+                  </button>
+                  <button class="action-btn-small secondary" id="import-folders-only">
+                    <span class="btn-icon">📥</span>
+                    Import Folders
+                  </button>
+                </div>
+                <p class="granular-help">Export/import folder structure and conversation locations</p>
+              </div>
+
+              <!-- Settings Only -->
+              <div class="granular-section">
+                <h4>⚙️ Settings & Preferences</h4>
+                <div class="backup-actions">
+                  <button class="action-btn-small primary" id="export-settings-only">
+                    <span class="btn-icon">📤</span>
+                    Export Settings
+                  </button>
+                  <button class="action-btn-small secondary" id="import-settings-only">
+                    <span class="btn-icon">📥</span>
+                    Import Settings
+                  </button>
+                </div>
+                <p class="granular-help">Export/import just your extension settings and preferences</p>
+              </div>
+
             </div>
           </div>
 
@@ -298,7 +371,7 @@
               <div class="about-icon">🏆</div>
               <div class="about-info">
                 <h3>ChatGPT Gold</h3>
-                <p class="version">Version 2.0.0</p>
+                <p class="version">Version 2.0.9</p>
               </div>
             </div>
             <div class="about-content">

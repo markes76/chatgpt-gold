@@ -70,15 +70,6 @@ class PopupDashboard {
       this.openAdvancedSearch();
     });
 
-    // Export data button
-    document.getElementById('export-data')?.addEventListener('click', () => {
-      this.exportAllData();
-    });
-
-    // Import data button
-    document.getElementById('import-data')?.addEventListener('click', () => {
-      this.importData();
-    });
 
   }
 
@@ -115,75 +106,6 @@ class PopupDashboard {
     }
   }
 
-  async exportAllData() {
-    try {
-      const result = await chrome.storage.local.get([
-        'chatgpt_gold_folders',
-        'chatgpt_gold_conversations',
-        'chatgpt_gold_prompts'
-      ]);
-
-      const exportData = {
-        version: '2.0.0',
-        timestamp: new Date().toISOString(),
-        ...result
-      };
-
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-        type: 'application/json' 
-      });
-      const url = URL.createObjectURL(blob);
-      
-      chrome.downloads.download({
-        url: url,
-        filename: `chatgpt-gold-export-${new Date().toISOString().split('T')[0]}.json`,
-        saveAs: true
-      });
-
-      this.showToast('Data exported successfully!');
-    } catch (error) {
-      console.error('Export failed:', error);
-      this.showToast('Export failed. Please try again.');
-    }
-  }
-
-  importData() {
-    // Create file input
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text);
-        
-        // Validate data structure
-        if (!data.version) {
-          throw new Error('Invalid backup file');
-        }
-
-        // Import data
-        await chrome.storage.local.set({
-          chatgpt_gold_folders: data.chatgpt_gold_folders || [],
-          chatgpt_gold_conversations: data.chatgpt_gold_conversations || [],
-          chatgpt_gold_prompts: data.chatgpt_gold_prompts || []
-        });
-
-        this.showToast('Data imported successfully!');
-        await this.loadStatistics(); // Refresh stats
-
-      } catch (error) {
-        console.error('Import failed:', error);
-        this.showToast('Import failed. Please check the file format.');
-      }
-    };
-    
-    input.click();
-  }
 
   showOnboarding() {
     // Open onboarding in a new popup window

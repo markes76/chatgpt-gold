@@ -948,3 +948,88 @@ body {
 .csp-toast.error {
   border-left-color: #ef4444;
 }
+
+/* Backup Actions */
+.backup-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.backup-actions .action-btn {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* Granular Sections */
+.granular-section {
+  background: var(--settings-bg-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--settings-border);
+}
+
+.granular-section:last-child {
+  margin-bottom: 0;
+}
+
+.granular-section h4 {
+  color: var(--settings-text);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.granular-section .backup-actions {
+  margin-bottom: 8px;
+}
+
+.granular-help {
+  color: var(--settings-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.action-btn-small {
+  padding: 8px 16px;
+  background: var(--settings-bg);
+  color: var(--settings-text);
+  border: 1px solid var(--settings-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  min-height: 36px;
+}
+
+.action-btn-small:hover {
+  background: var(--settings-bg-secondary);
+  border-color: var(--settings-primary);
+  transform: translateY(-1px);
+}
+
+.action-btn-small.primary {
+  background: var(--settings-primary);
+  color: white;
+  border-color: var(--settings-primary);
+}
+
+.action-btn-small.primary:hover {
+  background: var(--settings-primary-hover);
+  border-color: var(--settings-primary-hover);
+}
+
+.action-btn-small .btn-icon {
+  font-size: 12px;
+}
