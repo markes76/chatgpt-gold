@@ -3457,22 +3457,28 @@ EOF < /dev/null
 }
 
 .cg-emoji-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 10000;
+  position: fixed;
+  z-index: 99999;
   background: var(--cg-bg);
   border: 1px solid var(--cg-border);
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   padding: 16px;
   width: 280px;
-  max-height: 320px;
+  max-height: 380px;
   display: none;
+  margin-top: 4px;
 }
 
 .cg-emoji-dropdown.show {
   display: block;
+}
+
+/* Ensure emoji picker doesn't interfere with modal actions */
+.cg-modal.cg-folder-modal .cg-form-actions,
+.cg-modal.cg-prompt-modal .cg-form-actions {
+  z-index: 1000;
+  position: relative;
 }
 
 .cg-emoji-search {
@@ -3495,7 +3501,8 @@ EOF < /dev/null
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   gap: 4px;
-  max-height: 240px;
+  height: 192px;
+  max-height: 192px;
   overflow-y: auto;
   padding: 2px;
 }

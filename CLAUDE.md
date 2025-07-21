@@ -290,6 +290,48 @@ Extensive retry logic for "Extension context invalidated" scenarios common with 
 - Professional grid-based interface matching modern design patterns
 - Compact spacing that maximizes content visibility
 
+### Commit #7 - Emoji Picker Polish & Modal Layout Fixes (v2.2.1)
+**Date**: July 21, 2025
+**Changes**: Critical fixes for emoji picker positioning and modal layout consistency
+
+**Major Fixes**:
+1. **Button Overlap Resolution**:
+   - Fixed emoji picker z-index from 10000 to 99999 to prevent button overlap
+   - Changed positioning from absolute to fixed for consistent placement
+   - Added smart edge detection to prevent off-screen dropdowns
+
+2. **Consistent Grid Height**:
+   - Standardized emoji grid to exactly 192px height (6 rows)
+   - Fixed grid showing inconsistent row counts between libraries
+   - Improved scrolling behavior with proper height constraints
+
+3. **Modal Layout Improvements**:
+   - Enhanced modal form actions z-index for better layering
+   - Added responsive positioning with viewport edge detection
+   - Improved dropdown positioning relative to trigger button
+
+4. **Cross-Resolution Compatibility**:
+   - Added viewport boundary checks for 1280×720 and 1920×1080
+   - Smart positioning that flips above button when space is limited
+   - Consistent 10px minimum margin from screen edges
+
+5. **Color Selector Consistency**:
+   - Verified folder creation already has color picker (matching prompts)
+   - Enhanced color picker visibility in modal layout
+   - Maintained feature parity between both libraries
+
+**Files Modified**:
+- `prompt-manager.js` - Enhanced emoji picker positioning with edge detection
+- `folder-manager.js` - Enhanced emoji picker positioning with edge detection
+- `styles.css` - Fixed z-index layering and modal action positioning
+- `manifest.json`, `popup.html`, `options.html` - Version bump to 2.2.1
+
+**User Benefits**:
+- No more button overlap in emoji picker dropdowns
+- Consistent 6-row emoji grid across all dialogs
+- Perfect positioning on all screen sizes (1280×720 to 1920×1080+)
+- Smooth user experience without clipping or off-screen elements
+
 ## Commit Tracking
 
-- **Latest Commit Number**: #6
+- **Latest Commit Number**: #7
