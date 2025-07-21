@@ -188,6 +188,60 @@ Extensive retry logic for "Extension context invalidated" scenarios common with 
 - Better organization and discoverability of backup features
 - Improved data portability and sharing capabilities
 
+### Commit #5 - Prompt Library Aesthetic Overhaul (v2.1.0)
+**Date**: July 21, 2025
+**Changes**: Complete aesthetic and UX consistency upgrade for Prompt Library to match Conversation Library
+
+**Major Improvements**:
+1. **Visual Design Consistency**:
+   - Added color-coded borders to prompt categories (matching folder design)
+   - Added icons to each prompt category for better visual identification
+   - Improved drag handle styling with consistent SVG icons
+   - Enhanced hover effects and visual feedback throughout
+
+2. **Enhanced Category Management**:
+   - **Color & Icon Support**: Each category now has customizable colors and icons
+   - **Controlled Dropdown**: Replaced free-text category field with organized dropdown
+   - **Add New Categories**: Inline category creation with icon and color selection
+   - **Category Management**: Dedicated management interface for editing/deleting categories
+
+3. **Smart Category Deletion System**:
+   - **Safety Prompts**: Warns users before deleting categories with prompts
+   - **Reassignment Options**: Move prompts to "Uncategorized" or another category
+   - **Prompt Protection**: Prevents accidental data loss with confirmation dialogs
+   - **Empty Category Handling**: Safe deletion for categories without prompts
+
+4. **Improved Layout & Spacing**:
+   - Aligned prompt category headers with folder design patterns
+   - Consistent padding and margins throughout
+   - Better visual hierarchy and organization
+   - Reduced unnecessary spacing and clutter
+
+5. **Advanced Category Features**:
+   - **Edit Categories**: Modify names, icons, and colors of existing categories
+   - **Category Controls**: Edit/delete buttons appear on hover
+   - **Default Categories**: Pre-configured categories with appropriate icons and colors
+   - **Data Integrity**: Automatic prompt reassignment when categories are renamed
+
+**Technical Details**:
+- Added comprehensive category data structure with icons and colors
+- Implemented robust category CRUD operations with error handling
+- Enhanced modal system for category management workflows
+- Added extensive CSS styling for visual consistency
+- Version bumped to 2.1.0 for major feature release
+
+**Files Modified**:
+- `prompt-manager.js` - Complete category management system implementation
+- `styles.css` - Extensive styling for new category features and visual improvements
+- `manifest.json` - Version bump to 2.1.0
+
+**User Benefits**:
+- Visually consistent interface matching Conversation Library design
+- Much better category organization and management capabilities
+- Professional appearance with color-coded categories and icons
+- Safe category deletion with data protection features
+- Intuitive dropdown-based category selection
+
 ## Commit Tracking
 
-- **Latest Commit Number**: #4
+- **Latest Commit Number**: #5

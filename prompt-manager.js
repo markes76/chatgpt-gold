@@ -9,6 +9,7 @@ class PromptManager {
   constructor(parentInstance) {
     this.parent = parentInstance;
     this.prompts = [];
+    this.categories = []; // Track categories with their colors and icons
     this.currentModal = null;
     this.pendingFavoriteOperations = new Set();
     this.categoryOrder = []; // Track category order
@@ -30,6 +31,7 @@ class PromptManager {
 
   async init() {
     await this.loadPrompts();
+    await this.loadCategories();
     await this.loadCategoryOrder();
     await this.loadCategoryExpandedState();
     this.renderPrompts();
@@ -109,6 +111,69 @@ class PromptManager {
         }
       }
     }
+  }
+
+  async loadCategories() {
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: 'STORAGE_GET',
+        keys: ['chatgpt_gold_prompt_categories']
+      });
+      
+      if (response.success) {
+        this.categories = response.data.chatgpt_gold_prompt_categories || this.getDefaultCategories();
+      } else {
+        throw new Error(response.error);
+      }
+    } catch (error) {
+      console.warn('ChatGPT Gold: Failed to load categories via background script, using localStorage fallback');
+      try {
+        const stored = localStorage.getItem('chatgpt_gold_prompt_categories_backup');
+        this.categories = stored ? JSON.parse(stored) : this.getDefaultCategories();
+      } catch (localError) {
+        console.error('ChatGPT Gold: localStorage fallback failed:', localError);
+        this.categories = this.getDefaultCategories();
+      }
+    }
+  }
+
+  getDefaultCategories() {
+    return [
+      { name: 'Development', icon: '💻', color: '#3b82f6' },
+      { name: 'Education', icon: '📚', color: '#10b981' },
+      { name: 'Communication', icon: '✉️', color: '#8b5cf6' },
+      { name: 'Writing', icon: '✍️', color: '#f59e0b' },
+      { name: 'Analysis', icon: '📊', color: '#ef4444' },
+      { name: 'Quick', icon: '⚡', color: '#06b6d4' }
+    ];
+  }
+
+  async saveCategories() {
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: 'STORAGE_SET',
+        data: { chatgpt_gold_prompt_categories: this.categories }
+      });
+      
+      if (!response.success) {
+        throw new Error(response.error);
+      }
+      
+      localStorage.setItem('chatgpt_gold_prompt_categories_backup', JSON.stringify(this.categories));
+    } catch (error) {
+      console.warn('ChatGPT Gold: Failed to save categories via background script, using localStorage fallback:', error);
+      try {
+        localStorage.setItem('chatgpt_gold_prompt_categories_backup', JSON.stringify(this.categories));
+      } catch (localError) {
+        console.error('ChatGPT Gold: localStorage fallback failed:', localError);
+        throw error;
+      }
+    }
+  }
+
+  getCategoryInfo(categoryName) {
+    const category = this.categories.find(cat => cat.name === categoryName);
+    return category || { name: categoryName, icon: '📁', color: '#6b7280' };
   }
 
   async createPrompt(promptData) {
@@ -286,13 +351,22 @@ class PromptManager {
           const expanded = this.isCategoryExpanded(category);
           return `
           <div class="cg-prompt-category ${expanded ? 'expanded' : ''}" data-category="${category}" draggable="true">
-            <div class="cg-category-header">
-              <span class="cg-drag-handle" title="Drag to reorder category">⋮⋮</span>
+            <div class="cg-category-header" style="border-left: 3px solid ${this.getCategoryInfo(category).color}">
+              <div class="cg-drag-handle" draggable="true" title="Drag to reorder category">
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM9 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM9 15a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM14 5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM14 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM14 15a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" fill="currentColor"></path>
+                </svg>
+              </div>
               <button class="cg-category-toggle" data-action="toggle-category" data-category="${category}" type="button">
                 <span data-action="toggle-category" data-category="${category}">${expanded ? '▼' : '▶'}</span>
               </button>
+              <span class="cg-category-icon">${this.getCategoryInfo(category).icon}</span>
               <span class="cg-category-name">${category}</span>
               <span class="cg-category-count">(${prompts.length})</span>
+              <div class="cg-category-controls">
+                <button class="cg-category-btn" data-action="edit-category" data-category="${category}" title="Edit category">✏️</button>
+                <button class="cg-category-btn" data-action="delete-category" data-category="${category}" title="Delete category">🗑️</button>
+              </div>
             </div>
             <div class="cg-category-prompts" style="display: ${expanded ? 'block' : 'none'}">
               ${sortedPrompts.map(prompt => `
@@ -907,6 +981,7 @@ class PromptManager {
       const target = e.target;
       const action = target.dataset.action;
       const promptId = target.dataset.promptId;
+      const categoryName = target.dataset.category;
 
       if (action === 'new-prompt' || target.id === 'cg-new-prompt') {
         this.showPromptDialog();
@@ -915,6 +990,10 @@ class PromptManager {
         // Note: Category toggles are now handled by direct listeners in setupCategoryToggleListeners()
         // This event delegation handler is kept as fallback but shouldn't be needed
         return;
+      } else if (action === 'edit-category' && categoryName) {
+        this.showEditCategoryDialog(categoryName);
+      } else if (action === 'delete-category' && categoryName) {
+        this.showDeleteCategoryDialog(categoryName);
       } else if (promptId) {
         switch (action) {
           case 'favorite-prompt':
@@ -976,7 +1055,44 @@ class PromptManager {
             </div>
             <div class="cg-form-group">
               <label class="cg-form-label">Category</label>
-              <input type="text" class="cg-form-input" name="category" value="${prompt?.category || ''}" placeholder="e.g., Writing, Development">
+              <div class="cg-category-input-container">
+                <select class="cg-form-input" name="category" id="cg-category-select">
+                  ${this.categories.map(cat => `
+                    <option value="${cat.name}" ${prompt?.category === cat.name ? 'selected' : ''}>
+                      ${cat.icon} ${cat.name}
+                    </option>
+                  `).join('')}
+                  ${prompt?.category && !this.categories.find(cat => cat.name === prompt.category) ? 
+                    `<option value="${prompt.category}" selected>${this.getCategoryInfo(prompt.category).icon} ${prompt.category}</option>` : ''
+                  }
+                  <option value="__new__">➕ Create New Category...</option>
+                </select>
+                <button type="button" class="cg-manage-categories-btn" id="cg-manage-categories" title="Manage categories">⚙️</button>
+              </div>
+              <div class="cg-new-category-form" id="cg-new-category-form" style="display: none;">
+                <input type="text" class="cg-form-input" id="cg-new-category-name" placeholder="Category name">
+                <div class="cg-category-customization">
+                  <label>Icon:</label>
+                  <select class="cg-form-input" id="cg-new-category-icon">
+                    <option value="📁">📁 Folder</option>
+                    <option value="💻">💻 Development</option>
+                    <option value="📚">📚 Education</option>
+                    <option value="✉️">✉️ Communication</option>
+                    <option value="✍️">✍️ Writing</option>
+                    <option value="📊">📊 Analysis</option>
+                    <option value="⚡">⚡ Quick</option>
+                    <option value="🎨">🎨 Creative</option>
+                    <option value="🔧">🔧 Tools</option>
+                    <option value="💡">💡 Ideas</option>
+                  </select>
+                  <label>Color:</label>
+                  <input type="color" class="cg-form-input cg-color-input" id="cg-new-category-color" value="#3b82f6">
+                </div>
+                <div class="cg-new-category-actions">
+                  <button type="button" class="cg-btn cg-btn-small cg-btn-primary" id="cg-create-category">Create</button>
+                  <button type="button" class="cg-btn cg-btn-small cg-btn-secondary" id="cg-cancel-category">Cancel</button>
+                </div>
+              </div>
             </div>
             <div class="cg-form-actions">
               <button type="submit" class="cg-btn cg-btn-primary">${isEdit ? 'Update' : 'Create'} Prompt</button>
@@ -989,6 +1105,9 @@ class PromptManager {
     
     document.body.appendChild(modal);
     this.currentModal = modal;
+
+    // Setup category management handlers
+    this.setupCategoryManagementHandlers(modal);
 
     const form = modal.querySelector('#cg-prompt-form');
     form.addEventListener('submit', async (e) => {
@@ -1026,6 +1145,338 @@ class PromptManager {
     });
 
     setTimeout(() => { modal.querySelector('input[name="title"]')?.focus(); }, 100);
+  }
+
+  setupCategoryManagementHandlers(modal) {
+    const categorySelect = modal.querySelector('#cg-category-select');
+    const newCategoryForm = modal.querySelector('#cg-new-category-form');
+    const manageCategoriesBtn = modal.querySelector('#cg-manage-categories');
+    const createCategoryBtn = modal.querySelector('#cg-create-category');
+    const cancelCategoryBtn = modal.querySelector('#cg-cancel-category');
+
+    // Handle category selection
+    categorySelect.addEventListener('change', (e) => {
+      if (e.target.value === '__new__') {
+        newCategoryForm.style.display = 'block';
+        modal.querySelector('#cg-new-category-name')?.focus();
+      } else {
+        newCategoryForm.style.display = 'none';
+      }
+    });
+
+    // Handle create new category
+    createCategoryBtn?.addEventListener('click', async () => {
+      const name = modal.querySelector('#cg-new-category-name').value.trim();
+      const icon = modal.querySelector('#cg-new-category-icon').value;
+      const color = modal.querySelector('#cg-new-category-color').value;
+
+      if (!name) {
+        this.parent.showToast('Please enter a category name');
+        return;
+      }
+
+      if (this.categories.find(cat => cat.name.toLowerCase() === name.toLowerCase())) {
+        this.parent.showToast('Category already exists');
+        return;
+      }
+
+      try {
+        // Add new category
+        this.categories.push({ name, icon, color });
+        await this.saveCategories();
+
+        // Update the select options
+        const newOption = document.createElement('option');
+        newOption.value = name;
+        newOption.textContent = `${icon} ${name}`;
+        newOption.selected = true;
+        
+        // Insert before the "Create New" option
+        const createNewOption = categorySelect.querySelector('option[value="__new__"]');
+        categorySelect.insertBefore(newOption, createNewOption);
+
+        // Hide the new category form and select the new category
+        newCategoryForm.style.display = 'none';
+        categorySelect.value = name;
+
+        this.parent.showToast(`Category "${name}" created successfully`);
+      } catch (error) {
+        console.error('Failed to create category:', error);
+        this.parent.showToast('Failed to create category');
+      }
+    });
+
+    // Handle cancel new category
+    cancelCategoryBtn?.addEventListener('click', () => {
+      newCategoryForm.style.display = 'none';
+      categorySelect.value = this.categories[0]?.name || 'Uncategorized';
+      modal.querySelector('#cg-new-category-name').value = '';
+    });
+
+    // Handle manage categories
+    manageCategoriesBtn?.addEventListener('click', () => {
+      this.showCategoryManagementDialog();
+    });
+  }
+
+  showCategoryManagementDialog() {
+    this.closeModal();
+    
+    const modal = document.createElement('div');
+    modal.className = 'cg-modal cg-category-management-modal';
+    modal.innerHTML = `
+      <div class="cg-modal-backdrop"></div>
+      <div class="cg-modal-content">
+        <div class="cg-modal-header">
+          <h3 class="cg-modal-title">Manage Categories</h3>
+          <button class="cg-modal-close" data-action="close-category-modal">×</button>
+        </div>
+        <div class="cg-modal-body">
+          <div class="cg-categories-list">
+            ${this.categories.map(category => `
+              <div class="cg-category-management-item" data-category="${category.name}">
+                <div class="cg-category-info" style="border-left: 3px solid ${category.color}">
+                  <span class="cg-category-icon">${category.icon}</span>
+                  <span class="cg-category-name">${category.name}</span>
+                  <span class="cg-category-count">(${this.prompts.filter(p => p.category === category.name).length} prompts)</span>
+                </div>
+                <div class="cg-category-actions">
+                  <button class="cg-btn cg-btn-small cg-btn-secondary" data-action="edit-category" data-category="${category.name}">✏️ Edit</button>
+                  <button class="cg-btn cg-btn-small cg-btn-danger" data-action="delete-category" data-category="${category.name}">🗑️ Delete</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="cg-form-actions">
+            <button type="button" class="cg-btn cg-btn-secondary" data-action="close-category-modal">Close</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    this.currentModal = modal;
+
+    // Setup event listeners
+    modal.addEventListener('click', (e) => {
+      const action = e.target.dataset.action;
+      const categoryName = e.target.dataset.category;
+
+      if (action === 'close-category-modal' || e.target.classList.contains('cg-modal-backdrop')) {
+        this.closeModal();
+      } else if (action === 'edit-category') {
+        this.showEditCategoryDialog(categoryName);
+      } else if (action === 'delete-category') {
+        this.showDeleteCategoryDialog(categoryName);
+      }
+    });
+  }
+
+  showEditCategoryDialog(categoryName) {
+    const category = this.categories.find(cat => cat.name === categoryName);
+    if (!category) return;
+
+    this.closeModal();
+    
+    const modal = document.createElement('div');
+    modal.className = 'cg-modal cg-edit-category-modal';
+    modal.innerHTML = `
+      <div class="cg-modal-backdrop"></div>
+      <div class="cg-modal-content">
+        <div class="cg-modal-header">
+          <h3 class="cg-modal-title">Edit Category</h3>
+          <button class="cg-modal-close" data-action="close-edit-category-modal">×</button>
+        </div>
+        <div class="cg-modal-body">
+          <form id="cg-edit-category-form">
+            <div class="cg-form-group">
+              <label class="cg-form-label">Category Name</label>
+              <input type="text" class="cg-form-input" name="name" value="${category.name}" required>
+            </div>
+            <div class="cg-form-group">
+              <label class="cg-form-label">Icon</label>
+              <select class="cg-form-input" name="icon">
+                <option value="📁" ${category.icon === '📁' ? 'selected' : ''}>📁 Folder</option>
+                <option value="💻" ${category.icon === '💻' ? 'selected' : ''}>💻 Development</option>
+                <option value="📚" ${category.icon === '📚' ? 'selected' : ''}>📚 Education</option>
+                <option value="✉️" ${category.icon === '✉️' ? 'selected' : ''}>✉️ Communication</option>
+                <option value="✍️" ${category.icon === '✍️' ? 'selected' : ''}>✍️ Writing</option>
+                <option value="📊" ${category.icon === '📊' ? 'selected' : ''}>📊 Analysis</option>
+                <option value="⚡" ${category.icon === '⚡' ? 'selected' : ''}>⚡ Quick</option>
+                <option value="🎨" ${category.icon === '🎨' ? 'selected' : ''}>🎨 Creative</option>
+                <option value="🔧" ${category.icon === '🔧' ? 'selected' : ''}>🔧 Tools</option>
+                <option value="💡" ${category.icon === '💡' ? 'selected' : ''}>💡 Ideas</option>
+              </select>
+            </div>
+            <div class="cg-form-group">
+              <label class="cg-form-label">Color</label>
+              <input type="color" class="cg-form-input cg-color-input" name="color" value="${category.color}">
+            </div>
+            <div class="cg-form-actions">
+              <button type="submit" class="cg-btn cg-btn-primary">Update Category</button>
+              <button type="button" class="cg-btn cg-btn-secondary" data-action="close-edit-category-modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    this.currentModal = modal;
+
+    const form = modal.querySelector('#cg-edit-category-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const newName = formData.get('name').trim();
+      const newIcon = formData.get('icon');
+      const newColor = formData.get('color');
+
+      if (!newName) {
+        this.parent.showToast('Please enter a category name');
+        return;
+      }
+
+      // Check if name already exists (excluding current category)
+      if (newName !== categoryName && this.categories.find(cat => cat.name.toLowerCase() === newName.toLowerCase())) {
+        this.parent.showToast('Category name already exists');
+        return;
+      }
+
+      try {
+        // Update category
+        category.name = newName;
+        category.icon = newIcon;
+        category.color = newColor;
+
+        // Update all prompts that use the old category name
+        if (newName !== categoryName) {
+          this.prompts.forEach(prompt => {
+            if (prompt.category === categoryName) {
+              prompt.category = newName;
+            }
+          });
+          await this.savePrompts();
+        }
+
+        await this.saveCategories();
+        this.renderPrompts();
+        this.closeModal();
+        
+        this.parent.showToast(`Category updated successfully`);
+      } catch (error) {
+        console.error('Failed to update category:', error);
+        this.parent.showToast('Failed to update category');
+      }
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target.dataset.action === 'close-edit-category-modal' || e.target.classList.contains('cg-modal-backdrop')) {
+        this.closeModal();
+      }
+    });
+  }
+
+  showDeleteCategoryDialog(categoryName) {
+    const category = this.categories.find(cat => cat.name === categoryName);
+    if (!category) return;
+
+    const promptsInCategory = this.prompts.filter(p => p.category === categoryName);
+    
+    this.closeModal();
+    
+    const modal = document.createElement('div');
+    modal.className = 'cg-modal cg-delete-category-modal';
+    modal.innerHTML = `
+      <div class="cg-modal-backdrop"></div>
+      <div class="cg-modal-content">
+        <div class="cg-modal-header">
+          <h3 class="cg-modal-title">Delete Category</h3>
+          <button class="cg-modal-close" data-action="close-delete-category-modal">×</button>
+        </div>
+        <div class="cg-modal-body">
+          <div class="cg-warning-message">
+            <div class="cg-warning-icon">⚠️</div>
+            <div class="cg-warning-content">
+              <h4>Delete "${category.name}" category?</h4>
+              ${promptsInCategory.length > 0 ? `
+                <p>This category contains <strong>${promptsInCategory.length} prompt(s)</strong>. What would you like to do with them?</p>
+                <div class="cg-deletion-options">
+                  <label class="cg-radio-option">
+                    <input type="radio" name="deletion-action" value="uncategorized" checked>
+                    <span>Move all prompts to "Uncategorized"</span>
+                  </label>
+                  <label class="cg-radio-option">
+                    <input type="radio" name="deletion-action" value="reassign">
+                    <span>Move all prompts to another category:</span>
+                  </label>
+                  <select class="cg-form-input cg-reassign-category" id="cg-reassign-select" disabled>
+                    ${this.categories.filter(cat => cat.name !== categoryName).map(cat => `
+                      <option value="${cat.name}">${cat.icon} ${cat.name}</option>
+                    `).join('')}
+                  </select>
+                </div>
+              ` : `
+                <p>This category is empty and can be safely deleted.</p>
+              `}
+            </div>
+          </div>
+          <div class="cg-form-actions">
+            <button type="button" class="cg-btn cg-btn-danger" id="cg-confirm-delete-category">Delete Category</button>
+            <button type="button" class="cg-btn cg-btn-secondary" data-action="close-delete-category-modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    this.currentModal = modal;
+
+    // Setup reassign category dropdown
+    const reassignRadio = modal.querySelector('input[value="reassign"]');
+    const reassignSelect = modal.querySelector('#cg-reassign-select');
+    
+    modal.querySelectorAll('input[name="deletion-action"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        reassignSelect.disabled = !reassignRadio.checked;
+      });
+    });
+
+    // Handle delete confirmation
+    modal.querySelector('#cg-confirm-delete-category').addEventListener('click', async () => {
+      try {
+        if (promptsInCategory.length > 0) {
+          const deletionAction = modal.querySelector('input[name="deletion-action"]:checked').value;
+          const targetCategory = deletionAction === 'reassign' ? reassignSelect.value : 'Uncategorized';
+
+          // Reassign all prompts
+          promptsInCategory.forEach(prompt => {
+            prompt.category = targetCategory;
+          });
+          
+          await this.savePrompts();
+        }
+
+        // Remove category
+        this.categories = this.categories.filter(cat => cat.name !== categoryName);
+        await this.saveCategories();
+        
+        this.renderPrompts();
+        this.closeModal();
+        
+        this.parent.showToast(`Category "${categoryName}" deleted successfully`);
+      } catch (error) {
+        console.error('Failed to delete category:', error);
+        this.parent.showToast('Failed to delete category');
+      }
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target.dataset.action === 'close-delete-category-modal' || e.target.classList.contains('cg-modal-backdrop')) {
+        this.closeModal();
+      }
+    });
   }
 
   showDeleteConfirmDialog(prompt) {
