@@ -26,6 +26,7 @@ class PromptManager {
       direction: 'asc', // asc, desc
       previousState: null
     };
+    this.emojiData = this.getEmojiData();
     this.init();
   }
 
@@ -174,6 +175,18 @@ class PromptManager {
   getCategoryInfo(categoryName) {
     const category = this.categories.find(cat => cat.name === categoryName);
     return category || { name: categoryName, icon: '📁', color: '#6b7280' };
+  }
+
+  getEmojiData() {
+    return {
+      'Smileys & People': ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '☺️', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐'],
+      'Animals & Nature': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🪲', '🦟', '🦗', '🕷️', '🕸️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦣', '🦏', '🦛', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦔', '🦦', '🦥', '🐁', '🐀', '🐿️', '🦫'],
+      'Food & Drink': ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🫕', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯'],
+      'Activity': ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️‍♀️', '🏋️', '🤼‍♀️', '🤼', '🤸‍♀️', '🤸', '⛹️‍♀️', '⛹️', '🤺', '🤾‍♀️', '🤾', '🏌️‍♀️', '🏌️', '🧘‍♀️', '🧘', '🏄‍♀️', '🏄', '🏊‍♀️', '🏊', '🤽‍♀️', '🤽', '🚣‍♀️', '🚣', '🧗‍♀️', '🧗', '🚵‍♀️', '🚵', '🚴‍♀️', '🚴', '🏆', '🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️', '🎗️', '🎫', '🎟️', '🎪', '🤹‍♀️', '🤹', '🎭', '🩰', '🎨', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶', '🪘', '🥁', '🪗', '🎷', '🎺', '🪕', '🎸', '🪈', '🎻', '🎲', '♠️', '♥️', '♦️', '♣️', '♟️', '🃏', '🀄', '🎴', '🎯', '🎳'],
+      'Travel & Places': ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🛻', '🚚', '🚛', '🚜', '🏍️', '🛵', '🚲', '🛴', '🛹', '🛼', '🚁', '🛸', '✈️', '🛩️', '🛫', '🛬', '🪂', '💺', '🚀', '🛰️', '🚉', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🎢', '🎡', '🎠', '🎪', '🚢', '🛥️', '🚤', '⛵', '🛶', '⚓', '⛽', '🚧', '🚨', '🚥', '🚦', '🛑', '🚏', '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🛖', '🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🕍', '🛕', '🕋'],
+      'Objects': ['⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '🕹️', '🗜️', '💽', '💾', '💿', '📀', '📼', '📷', '📸', '📹', '🎥', '📽️', '🎞️', '📞', '☎️', '📟', '📠', '📺', '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⌛', '⏳', '📡', '🔋', '🔌', '💡', '🔦', '🕯️', '🪔', '🧯', '🛢️', '💸', '💵', '💴', '💶', '💷', '🪙', '💰', '💳', '💎', '⚖️', '🪜', '🧰', '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🪓', '🪚', '🔩', '⚙️', '🪤', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🪓', '🔪', '🗡️', '⚔️', '🛡️', '🚬', '⚰️', '🪦', '⚱️', '🏺', '🔮', '📿', '🧿', '💈', '⚗️', '🔭', '🔬', '🕳️', '🩹', '🩺', '💊', '💉', '🧬', '🦠', '🧫', '🧪', '🌡️', '🧹', '🧺', '🧻', '🚽', '🚰', '🚿', '🛁', '🛀', '🧴', '🧷', '🧸', '🧵', '🧶', '🪡', '🪢', '🧽', '🪣', '🧼', '🪥', '🪒', '🧴', '🛎️', '🔑', '🗝️', '🚪', '🪑', '🛏️', '🛋️', '🪞', '🪟', '🚽', '🚿', '🛁', '🪣', '🧴', '🧼', '🧽', '🧹', '🧺', '🧻'],
+      'Symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗', '❕', '❓', '❔', '‼️', '⁉️', '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '🈯', '💹', '❇️', '✳️', '❎', '🌐', '💠', 'Ⓜ️', '🌀', '💤', '🏧', '🚾', '♿', '🅿️', '🈳', '🈂️', '🛂', '🛃', '🛄', '🛅', '🚹', '🚺', '🚼', '🚻', '🚮', '🎦', '📶', '🈁', '🔣', 'ℹ️', '🔤', '🔡', '🔠', '🆖', '🆗', '🆙', '🆒', '🆕', '🆓', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '🔢', '#️⃣', '*️⃣', '⏏️', '▶️', '⏸️', '⏯️', '⏹️', '⏺️', '⏭️', '⏮️', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔁', '🔂', '🔄', '🔃', '🎵', '🎶', '➕', '➖', '➗', '✖️', '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '✔️', '☑️', '🔘', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '⚫', '⚪', '🟤', '🔺', '🔻', '🔸', '🔹', '🔶', '🔷', '🔳', '🔲', '▪️', '▫️', '◾', '◽', '◼️', '◻️', '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '⬛', '⬜', '🟫', '🔈', '🔇', '🔉', '🔊', '🔔', '🔕', '📣', '📢', '👁️‍🗨️', '💬', '💭', '🗯️', '♠️', '♣️', '♥️', '♦️', '🃏', '🎴', '🀄', '🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚', '🕛', '🕜', '🕝', '🕞', '🕟', '🕠', '🕡', '🕢', '🕣', '🕤', '🕥', '🕦', '🕧']
+    };
   }
 
   async createPrompt(promptData) {
@@ -1073,18 +1086,7 @@ class PromptManager {
                 <input type="text" class="cg-form-input" id="cg-new-category-name" placeholder="Category name">
                 <div class="cg-category-customization">
                   <label>Icon:</label>
-                  <select class="cg-form-input" id="cg-new-category-icon">
-                    <option value="📁">📁 Folder</option>
-                    <option value="💻">💻 Development</option>
-                    <option value="📚">📚 Education</option>
-                    <option value="✉️">✉️ Communication</option>
-                    <option value="✍️">✍️ Writing</option>
-                    <option value="📊">📊 Analysis</option>
-                    <option value="⚡">⚡ Quick</option>
-                    <option value="🎨">🎨 Creative</option>
-                    <option value="🔧">🔧 Tools</option>
-                    <option value="💡">💡 Ideas</option>
-                  </select>
+                  <div id="cg-new-category-icon-picker"></div>
                   <label>Color:</label>
                   <input type="color" class="cg-form-input cg-color-input" id="cg-new-category-color" value="#3b82f6">
                 </div>
@@ -1153,6 +1155,13 @@ class PromptManager {
     const manageCategoriesBtn = modal.querySelector('#cg-manage-categories');
     const createCategoryBtn = modal.querySelector('#cg-create-category');
     const cancelCategoryBtn = modal.querySelector('#cg-cancel-category');
+    const iconPickerContainer = modal.querySelector('#cg-new-category-icon-picker');
+
+    // Create and setup emoji picker for new categories
+    if (iconPickerContainer) {
+      const emojiPicker = this.createEmojiPicker('📁');
+      iconPickerContainer.appendChild(emojiPicker);
+    }
 
     // Handle category selection
     categorySelect.addEventListener('change', (e) => {
@@ -1167,7 +1176,8 @@ class PromptManager {
     // Handle create new category
     createCategoryBtn?.addEventListener('click', async () => {
       const name = modal.querySelector('#cg-new-category-name').value.trim();
-      const icon = modal.querySelector('#cg-new-category-icon').value;
+      const emojiPicker = iconPickerContainer?.querySelector('.cg-emoji-picker');
+      const icon = emojiPicker ? this.getSelectedEmoji(emojiPicker) : '📁';
       const color = modal.querySelector('#cg-new-category-color').value;
 
       if (!name) {
@@ -1295,18 +1305,7 @@ class PromptManager {
             </div>
             <div class="cg-form-group">
               <label class="cg-form-label">Icon</label>
-              <select class="cg-form-input" name="icon">
-                <option value="📁" ${category.icon === '📁' ? 'selected' : ''}>📁 Folder</option>
-                <option value="💻" ${category.icon === '💻' ? 'selected' : ''}>💻 Development</option>
-                <option value="📚" ${category.icon === '📚' ? 'selected' : ''}>📚 Education</option>
-                <option value="✉️" ${category.icon === '✉️' ? 'selected' : ''}>✉️ Communication</option>
-                <option value="✍️" ${category.icon === '✍️' ? 'selected' : ''}>✍️ Writing</option>
-                <option value="📊" ${category.icon === '📊' ? 'selected' : ''}>📊 Analysis</option>
-                <option value="⚡" ${category.icon === '⚡' ? 'selected' : ''}>⚡ Quick</option>
-                <option value="🎨" ${category.icon === '🎨' ? 'selected' : ''}>🎨 Creative</option>
-                <option value="🔧" ${category.icon === '🔧' ? 'selected' : ''}>🔧 Tools</option>
-                <option value="💡" ${category.icon === '💡' ? 'selected' : ''}>💡 Ideas</option>
-              </select>
+              <div id="cg-edit-category-icon-picker"></div>
             </div>
             <div class="cg-form-group">
               <label class="cg-form-label">Color</label>
@@ -1324,13 +1323,21 @@ class PromptManager {
     document.body.appendChild(modal);
     this.currentModal = modal;
 
+    // Setup emoji picker for editing
+    const editIconPickerContainer = modal.querySelector('#cg-edit-category-icon-picker');
+    if (editIconPickerContainer) {
+      const editEmojiPicker = this.createEmojiPicker(category.icon);
+      editIconPickerContainer.appendChild(editEmojiPicker);
+    }
+
     const form = modal.querySelector('#cg-edit-category-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const formData = new FormData(form);
       const newName = formData.get('name').trim();
-      const newIcon = formData.get('icon');
+      const editEmojiPicker = editIconPickerContainer?.querySelector('.cg-emoji-picker');
+      const newIcon = editEmojiPicker ? this.getSelectedEmoji(editEmojiPicker) : category.icon;
       const newColor = formData.get('color');
 
       if (!newName) {
@@ -1827,6 +1834,154 @@ class PromptManager {
       }
       this.currentModal = null;
     }
+  }
+
+  // Emoji Picker Component Methods
+  createEmojiPicker(selectedEmoji = '📁') {
+    const picker = document.createElement('div');
+    picker.className = 'cg-emoji-picker';
+    
+    picker.innerHTML = `
+      <button type="button" class="cg-emoji-button" data-selected-emoji="${selectedEmoji}">
+        ${selectedEmoji}
+      </button>
+      <div class="cg-emoji-dropdown">
+        <input type="text" class="cg-emoji-search" placeholder="Search emojis..." />
+        <div class="cg-emoji-categories">
+          <button type="button" class="cg-emoji-category-btn active" data-category="Smileys & People">😀</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Animals & Nature">🐶</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Food & Drink">🍎</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Activity">⚽</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Travel & Places">🚗</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Objects">⌚</button>
+          <button type="button" class="cg-emoji-category-btn" data-category="Symbols">❤️</button>
+        </div>
+        <div class="cg-emoji-grid"></div>
+      </div>
+    `;
+
+    this.setupEmojiPickerEvents(picker);
+    return picker;
+  }
+
+  setupEmojiPickerEvents(picker) {
+    const button = picker.querySelector('.cg-emoji-button');
+    const dropdown = picker.querySelector('.cg-emoji-dropdown');
+    const searchInput = picker.querySelector('.cg-emoji-search');
+    const categoryBtns = picker.querySelectorAll('.cg-emoji-category-btn');
+    const grid = picker.querySelector('.cg-emoji-grid');
+
+    let currentCategory = 'Smileys & People';
+    let isOpen = false;
+
+    // Toggle dropdown
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isOpen = !isOpen;
+      dropdown.classList.toggle('show', isOpen);
+      
+      if (isOpen) {
+        this.renderEmojiGrid(grid, currentCategory);
+        searchInput.focus();
+        // Close other open pickers
+        document.querySelectorAll('.cg-emoji-dropdown.show').forEach(otherDropdown => {
+          if (otherDropdown !== dropdown) {
+            otherDropdown.classList.remove('show');
+          }
+        });
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!picker.contains(e.target)) {
+        dropdown.classList.remove('show');
+        isOpen = false;
+      }
+    });
+
+    // Category switching
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        this.renderEmojiGrid(grid, currentCategory);
+      });
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      if (query) {
+        this.renderEmojiSearch(grid, query);
+      } else {
+        this.renderEmojiGrid(grid, currentCategory);
+      }
+    });
+
+    // Emoji selection
+    grid.addEventListener('click', (e) => {
+      if (e.target.classList.contains('cg-emoji-item')) {
+        const selectedEmoji = e.target.textContent;
+        button.textContent = selectedEmoji;
+        button.dataset.selectedEmoji = selectedEmoji;
+        dropdown.classList.remove('show');
+        isOpen = false;
+        
+        // Dispatch custom event for emoji selection
+        picker.dispatchEvent(new CustomEvent('emoji-selected', {
+          detail: { emoji: selectedEmoji }
+        }));
+      }
+    });
+  }
+
+  renderEmojiGrid(grid, category) {
+    const emojis = this.emojiData[category] || [];
+    grid.innerHTML = emojis.map(emoji => 
+      `<button type="button" class="cg-emoji-item">${emoji}</button>`
+    ).join('');
+  }
+
+  renderEmojiSearch(grid, query) {
+    const allEmojis = [];
+    Object.values(this.emojiData).forEach(categoryEmojis => {
+      allEmojis.push(...categoryEmojis);
+    });
+
+    // Simple search - you could enhance this with emoji names/keywords
+    const filteredEmojis = allEmojis.filter(emoji => {
+      // For now, just show all if query matches common terms
+      const commonTerms = {
+        'happy': ['😀', '😃', '😄', '😁', '😊', '🙂', '😎'],
+        'sad': ['😔', '😞', '😢', '😭', '😟'],
+        'love': ['❤️', '💕', '💖', '💗', '💝', '😍', '🥰'],
+        'fire': ['🔥'],
+        'star': ['⭐', '🌟', '✨', '🌠'],
+        'heart': ['❤️', '💕', '💖', '💗', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎'],
+        'work': ['💻', '⚙️', '🔧', '🔨', '📊', '📈', '📋'],
+        'money': ['💰', '💵', '💸', '🤑'],
+        'food': ['🍕', '🍔', '🍟', '🍎', '🥑', '🍇', '🍓'],
+        'animal': ['🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🐼']
+      };
+      
+      if (commonTerms[query]) {
+        return commonTerms[query].includes(emoji);
+      }
+      
+      return allEmojis.includes(emoji);
+    });
+
+    grid.innerHTML = (filteredEmojis.length > 0 ? filteredEmojis : allEmojis)
+      .slice(0, 64) // Limit results
+      .map(emoji => `<button type="button" class="cg-emoji-item">${emoji}</button>`)
+      .join('');
+  }
+
+  getSelectedEmoji(picker) {
+    const button = picker.querySelector('.cg-emoji-button');
+    return button.dataset.selectedEmoji || button.textContent;
   }
 }
 
