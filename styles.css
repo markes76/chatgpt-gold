@@ -1082,7 +1082,7 @@ nav div[role="list"] {
   max-height: 90vh;
   height: auto;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 24px rgba(0,0,0,0.25);
 }
 
@@ -1130,7 +1130,7 @@ nav div[role="list"] {
   max-width: 90vw;
   max-height: 90vh;
   width: 500px;
-  overflow: hidden;
+  overflow: visible;
   animation: modalSlideIn 0.3s ease-out;
 }
 
@@ -1185,7 +1185,9 @@ nav div[role="list"] {
 .cg-modal-body {
   padding: 20px;
   max-height: 60vh;
-  overflow-y: auto;
+  overflow-y: visible;
+  overflow-x: visible;
+  position: relative;
 }
 
 .cg-modal-description {
@@ -3482,8 +3484,8 @@ EOF < /dev/null
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: var(--cg-z-popover);
-  background: var(--cg-bg);
+  z-index: var(--cg-z-tooltip);
+  background: var(--cg-bg-primary);
   border: 1px solid var(--cg-border);
   border-radius: var(--cg-radius-lg);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
@@ -3507,11 +3509,11 @@ EOF < /dev/null
   transform: translateY(0);
 }
 
-/* Ensure emoji picker doesn't interfere with modal actions */
+/* Ensure emoji picker appears above modal actions */
 .cg-modal.cg-folder-modal .cg-form-actions,
 .cg-modal.cg-prompt-modal .cg-form-actions,
 .cg-modal.cg-edit-category-modal .cg-form-actions {
-  z-index: 1000;
+  z-index: 1;
   position: relative;
 }
 

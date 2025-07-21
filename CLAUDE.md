@@ -383,6 +383,41 @@ Extensive retry logic for "Extension context invalidated" scenarios common with 
 - Consistent spacing and styling foundation
 - Better performance with less JavaScript
 
+### Commit #9 - Emoji Picker Overlay Fix (v2.2.3)
+**Date**: July 21, 2025
+**Changes**: Fixed emoji picker dropdown being cut off by modal overflow
+
+**Major Fixes**:
+1. **Resolved Dropdown Clipping**:
+   - Changed modal `overflow: hidden` to `overflow: visible`
+   - Fixed both `.cg-modal-content` and `.cg-modal-body` overflow
+   - Dropdown now appears properly above modal buttons
+
+2. **Improved Z-Index Layering**:
+   - Updated emoji dropdown to use highest z-index (--cg-z-tooltip)
+   - Reduced form actions z-index to ensure dropdown appears above
+   - Proper stacking context for all modal elements
+
+3. **Enhanced Modal Structure**:
+   - Modal content allows overflow for dropdowns
+   - Maintained rounded corners with visible overflow
+   - Preserved animation effects
+
+**Technical Details**:
+- CSS-only solution maintaining performance
+- No JavaScript changes required
+- Proper use of CSS custom properties
+
+**Files Modified**:
+- `styles.css` - Fixed overflow and z-index issues
+- `manifest.json`, `popup.html`, `options.html` - Version bump to 2.2.3
+
+**User Benefits**:
+- Emoji picker dropdown fully visible
+- No more cut-off or overlapped UI elements
+- Smooth interaction with proper layering
+- Professional appearance maintained
+
 ## Commit Tracking
 
-- **Latest Commit Number**: #8
+- **Latest Commit Number**: #9
