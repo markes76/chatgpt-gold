@@ -2110,30 +2110,6 @@ class FolderManager {
       dropdown.classList.toggle('show', isOpen);
       
       if (isOpen) {
-        // Position dropdown relative to button using fixed positioning
-        const buttonRect = button.getBoundingClientRect();
-        const dropdownWidth = 280;
-        const dropdownHeight = 380;
-        
-        // Calculate position with edge detection
-        let left = buttonRect.left;
-        let top = buttonRect.bottom + 4;
-        
-        // Adjust horizontal position if dropdown would go off-screen
-        if (left + dropdownWidth > window.innerWidth) {
-          left = window.innerWidth - dropdownWidth - 10;
-        }
-        if (left < 10) left = 10;
-        
-        // Adjust vertical position if dropdown would go off-screen
-        if (top + dropdownHeight > window.innerHeight) {
-          top = buttonRect.top - dropdownHeight - 4;
-        }
-        if (top < 10) top = 10;
-        
-        dropdown.style.left = `${left}px`;
-        dropdown.style.top = `${top}px`;
-        
         this.renderEmojiGrid(grid, currentCategory);
         searchInput.focus();
         // Close other open pickers

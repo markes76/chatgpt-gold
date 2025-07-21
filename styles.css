@@ -18,6 +18,26 @@
   --cg-z-dropdown: 1002;
   --cg-z-toast: 1003;
   --cg-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Design Tokens - Spacing Scale */
+  --cg-space-xs: 4px;
+  --cg-space-sm: 8px;
+  --cg-space-md: 16px;
+  --cg-space-lg: 24px;
+  --cg-space-xl: 32px;
+  --cg-space-2xl: 48px;
+  
+  /* Design Tokens - Border Radius */
+  --cg-radius-sm: 4px;
+  --cg-radius-md: 6px;
+  --cg-radius-lg: 8px;
+  --cg-radius-xl: 12px;
+  
+  /* Design Tokens - Z-Index Scale */
+  --cg-z-modal-backdrop: 9999;
+  --cg-z-modal: 10000;
+  --cg-z-popover: 10001;
+  --cg-z-tooltip: 10002;
 }
 
 /* Dark mode detection */
@@ -3435,6 +3455,8 @@ EOF < /dev/null
 .cg-emoji-picker {
   position: relative;
   display: inline-block;
+  /* Prevent layout shift by maintaining consistent height */
+  min-height: 40px;
 }
 
 .cg-emoji-button {
@@ -3457,28 +3479,66 @@ EOF < /dev/null
 }
 
 .cg-emoji-dropdown {
-  position: fixed;
-  z-index: 99999;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: var(--cg-z-popover);
   background: var(--cg-bg);
   border: 1px solid var(--cg-border);
-  border-radius: 8px;
+  border-radius: var(--cg-radius-lg);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  padding: 16px;
+  padding: var(--cg-space-md);
   width: 280px;
   max-height: 380px;
-  display: none;
-  margin-top: 4px;
+  margin-top: var(--cg-space-xs);
+  /* Prevent dropdown from affecting modal layout */
+  transform: translateZ(0);
+  will-change: transform;
+  /* Animation */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 }
 
 .cg-emoji-dropdown.show {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 /* Ensure emoji picker doesn't interfere with modal actions */
 .cg-modal.cg-folder-modal .cg-form-actions,
-.cg-modal.cg-prompt-modal .cg-form-actions {
+.cg-modal.cg-prompt-modal .cg-form-actions,
+.cg-modal.cg-edit-category-modal .cg-form-actions {
   z-index: 1000;
   position: relative;
+}
+
+/* Prevent modal content reflow when emoji picker opens */
+.cg-modal-content {
+  /* Ensure consistent modal dimensions */
+  overflow: visible !important;
+}
+
+.cg-modal-body {
+  /* Prevent layout shift from dropdown */
+  position: relative;
+  overflow: visible;
+}
+
+/* Form group containing emoji picker needs proper overflow */
+.cg-form-group:has(.cg-emoji-picker) {
+  position: relative;
+  overflow: visible;
+  /* Ensure enough space for dropdown */
+  margin-bottom: var(--cg-space-md);
+}
+
+/* Align icon label with emoji picker button */
+.cg-form-group:has(.cg-emoji-picker) .cg-form-label {
+  margin-bottom: var(--cg-space-sm);
+  display: block;
 }
 
 .cg-emoji-search {

@@ -332,6 +332,57 @@ Extensive retry logic for "Extension context invalidated" scenarios common with 
 - Perfect positioning on all screen sizes (1280×720 to 1920×1080+)
 - Smooth user experience without clipping or off-screen elements
 
+### Commit #8 - Modal Stability Fix & Design Tokens (v2.2.2)
+**Date**: July 21, 2025
+**Changes**: Fixed modal shifting issue and implemented design tokens system
+
+**Major Fixes**:
+1. **Eliminated Modal Shifting**:
+   - Changed emoji dropdown from `position: fixed` to `position: absolute`
+   - Removed JavaScript manual positioning calculations
+   - Added proper overflow handling to prevent layout reflow
+   - Modal now stays perfectly stable when emoji picker opens
+
+2. **Smooth Animations**:
+   - Added fade-in animation for emoji dropdown appearance
+   - Used transform for animations instead of layout properties
+   - Smooth transitions without any jarring movements
+
+3. **Design Tokens System**:
+   - Added comprehensive spacing scale (xs to 2xl)
+   - Standardized border radius tokens
+   - Organized z-index scale for proper layering
+   - Created foundation for consistent UI across extension
+
+4. **Enhanced Modal Stability**:
+   - Set `overflow: visible` on modal content
+   - Proper positioning context for form groups
+   - Ensured dropdown doesn't affect modal dimensions
+   - Fixed form group spacing with emoji pickers
+
+5. **Code Cleanup**:
+   - Removed complex JavaScript positioning logic
+   - Simplified dropdown show/hide functionality
+   - Better separation of concerns between CSS and JS
+
+**Technical Details**:
+- CSS-only solution for dropdown positioning
+- Leveraged CSS `:has()` selector for targeted styling
+- Used CSS custom properties for design tokens
+- Maintained backward compatibility
+
+**Files Modified**:
+- `styles.css` - Major positioning fixes and design tokens
+- `prompt-manager.js` - Removed manual positioning code
+- `folder-manager.js` - Removed manual positioning code
+- `manifest.json`, `popup.html`, `options.html` - Version bump to 2.2.2
+
+**User Benefits**:
+- No more jarring modal jumps when clicking emoji picker
+- Smoother, more professional user experience
+- Consistent spacing and styling foundation
+- Better performance with less JavaScript
+
 ## Commit Tracking
 
-- **Latest Commit Number**: #7
+- **Latest Commit Number**: #8
