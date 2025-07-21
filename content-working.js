@@ -148,7 +148,6 @@ class ChatGPTGoldWorking {
             <button class="cg-btn cg-btn-small" id="cg-new-chat">New Chat</button>
             <button class="cg-btn cg-btn-small" id="cg-new-folder">New Folder</button>
             <button class="cg-btn cg-btn-small" id="cg-add-current-chat">Add Current</button>
-            <button class="cg-btn cg-btn-secondary cg-btn-small" id="cg-export-chat">Export</button>
           </div>
           <div id="cg-conversations-list">
             <!-- Folders and conversations will be populated by FolderManager -->
@@ -159,7 +158,6 @@ class ChatGPTGoldWorking {
         <div class="cg-sidebar-section" data-section="prompts">
           <div class="cg-prompt-actions">
             <button class="cg-btn cg-btn-small" id="cg-new-prompt">New Prompt</button>
-            <button class="cg-btn cg-btn-secondary cg-btn-small" id="cg-import-prompts">Import</button>
           </div>
           <div id="cg-prompts-list">
             <!-- Prompts will be populated by PromptManager -->
@@ -203,8 +201,6 @@ class ChatGPTGoldWorking {
         this.closeSidebar();
       } else if (target.id === 'cg-new-chat') {
         this.startNewChat();
-      } else if (target.id === 'cg-export-chat') {
-        this.exportCurrentChat();
       } else if (target.id === 'cg-new-prompt') {
         if (this.promptManager) {
           this.promptManager.showPromptDialog();
@@ -501,29 +497,6 @@ class ChatGPTGoldWorking {
     }
   }
 
-  exportCurrentChat() {
-    const messages = this.extractCurrentConversation();
-    if (messages.length === 0) {
-      this.showToast('No conversation to export');
-      return;
-    }
-
-    const chatData = {
-      title: this.getCurrentChatTitle(),
-      timestamp: new Date().toISOString(),
-      messages: messages
-    };
-
-    const blob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `chatgpt-conversation-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-
-    this.showToast('Conversation exported');
-  }
 
   handleResponseAction(action, responseElement) {
     const responseText = responseElement.innerText || responseElement.textContent;

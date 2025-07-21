@@ -128,7 +128,6 @@ class ChatGPTGold {
           <div class="cg-conversation-actions">
             <button class="cg-btn cg-btn-small" id="cg-new-folder">New Folder</button>
             <button class="cg-btn cg-btn-small" id="cg-add-current-chat">Add Current</button>
-            <button class="cg-btn cg-btn-secondary cg-btn-small" id="cg-export-chat">Export</button>
           </div>
           <div id="cg-conversations-list">
             <div class="cg-loading">Loading conversations...</div>
