@@ -77,14 +77,18 @@
             </div>
             <div class="setting-control">
               <div class="color-options">
-                <button class="color-option active" data-color="#10a37f" style="background: #10a37f;" title="Default Green"></button>
-                <button class="color-option" data-color="#3b82f6" style="background: #3b82f6;" title="Blue"></button>
-                <button class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;" title="Purple"></button>
-                <button class="color-option" data-color="#f59e0b" style="background: #f59e0b;" title="Amber"></button>
-                <button class="color-option" data-color="#ef4444" style="background: #ef4444;" title="Red"></button>
-                <button class="color-option" data-color="#ec4899" style="background: #ec4899;" title="Pink"></button>
-                <button class="color-option" data-color="#06b6d4" style="background: #06b6d4;" title="Cyan"></button>
-                <button class="color-option" data-color="#84cc16" style="background: #84cc16;" title="Lime"></button>
+                <button class="color-option active" data-color="#10a37f" style="background: linear-gradient(135deg, #10a37f, #0d8b6b);" title="Emerald Glass"></button>
+                <button class="color-option" data-color="#3b82f6" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);" title="Sapphire Glass"></button>
+                <button class="color-option" data-color="#8b5cf6" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" title="Amethyst Glass"></button>
+                <button class="color-option" data-color="#f59e0b" style="background: linear-gradient(135deg, #f59e0b, #d97706);" title="Amber Glass"></button>
+                <button class="color-option" data-color="#ef4444" style="background: linear-gradient(135deg, #ef4444, #dc2626);" title="Ruby Glass"></button>
+                <button class="color-option" data-color="#ec4899" style="background: linear-gradient(135deg, #ec4899, #db2777);" title="Rose Glass"></button>
+                <button class="color-option" data-color="#06b6d4" style="background: linear-gradient(135deg, #06b6d4, #0891b2);" title="Cyan Glass"></button>
+                <button class="color-option" data-color="#84cc16" style="background: linear-gradient(135deg, #84cc16, #65a30d);" title="Lime Glass"></button>
+                <button class="color-option" data-color="#6366f1" style="background: linear-gradient(135deg, #6366f1, #4f46e5);" title="Indigo Glass"></button>
+                <button class="color-option" data-color="#14b8a6" style="background: linear-gradient(135deg, #14b8a6, #0f766e);" title="Teal Glass"></button>
+                <button class="color-option" data-color="#f97316" style="background: linear-gradient(135deg, #f97316, #ea580c);" title="Orange Glass"></button>
+                <button class="color-option" data-color="#64748b" style="background: linear-gradient(135deg, #64748b, #475569);" title="Slate Glass"></button>
               </div>
               <div class="custom-color-picker">
                 <label for="custom-color">Custom Color:</label>
@@ -232,44 +236,24 @@
           <!-- Unified ZIP Export/Import -->
           <div class="setting-group">
             <div class="setting-header">
-              <h3>🗜️ Unified Backup (ZIP)</h3>
-              <p>Complete backup and restore with all data in a single ZIP file</p>
+              <h3>🗜️ Unified Backup (JSON)</h3>
+              <p>Complete backup and restore with all data in a single JSON file</p>
             </div>
             <div class="setting-control">
               <div class="backup-actions">
                 <button class="action-btn primary" id="export-zip">
                   <span class="btn-icon">📦</span>
-                  Export Everything as ZIP
+                  Export Everything as Bundle
                 </button>
                 <button class="action-btn secondary" id="import-zip">
                   <span class="btn-icon">📦</span>
-                  Import from ZIP
+                  Import Bundle
                 </button>
               </div>
-              <p class="setting-help">Includes all prompts, folders, conversations, and settings in one file</p>
+              <p class="setting-help">Includes all prompts, folders, conversations, and settings in one JSON file</p>
             </div>
           </div>
 
-          <!-- Complete JSON Backup -->
-          <div class="setting-group">
-            <div class="setting-header">
-              <h3>📄 Complete JSON Backup</h3>
-              <p>Single JSON file with all your ChatGPT Gold data</p>
-            </div>
-            <div class="setting-control">
-              <div class="backup-actions">
-                <button class="action-btn primary" id="export-all-data">
-                  <span class="btn-icon">📤</span>
-                  Export All Data
-                </button>
-                <button class="action-btn secondary" id="import-data">
-                  <span class="btn-icon">📥</span>
-                  Import All Data
-                </button>
-              </div>
-              <p class="setting-help">Traditional JSON format for all data</p>
-            </div>
-          </div>
 
           <!-- Granular Import/Export -->
           <div class="setting-group">
@@ -371,7 +355,7 @@
               <div class="about-icon">🏆</div>
               <div class="about-info">
                 <h3>ChatGPT Gold</h3>
-                <p class="version">Version 2.2.3</p>
+                <p class="version">Version 3.0.5</p>
               </div>
             </div>
             <div class="about-content">

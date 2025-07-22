@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Gold - AI Workspace",
-  "version": "2.2.3",
+  "version": "3.0.5",
   "description": "Transform ChatGPT into a full-featured AI workspace with enhanced UI, conversation management, prompt library, and advanced tools.",
   "permissions": [
     "storage",

@@ -318,10 +318,24 @@ class PromptManager {
       return acc;
     }, {});
 
+    // Include all defined categories, even if they have no prompts
+    this.categories.forEach(category => {
+      if (!promptsByCategory[category.name]) {
+        promptsByCategory[category.name] = [];
+      }
+    });
+
     // Initialize category order if empty
     if (this.categoryOrder.length === 0) {
       this.categoryOrder = Object.keys(promptsByCategory);
     }
+    
+    // Ensure all defined categories are in categoryOrder
+    this.categories.forEach(category => {
+      if (!this.categoryOrder.includes(category.name)) {
+        this.categoryOrder.push(category.name);
+      }
+    });
 
     // Sort categories and prompts based on current sort state
     const sortedCategories = this.getSortedCategories(Object.keys(promptsByCategory));
@@ -333,6 +347,7 @@ class PromptManager {
     container.innerHTML = `
       <div class="cg-prompt-actions">
         <button class="cg-btn cg-btn-small" id="cg-new-prompt">New Prompt</button>
+        <button class="cg-btn cg-btn-small" id="cg-manage-prompts">Manage Prompts</button>
       </div>
       <div class="cg-toolbar">
         <div class="cg-toolbar-left">
@@ -998,6 +1013,8 @@ class PromptManager {
 
       if (action === 'new-prompt' || target.id === 'cg-new-prompt') {
         this.showPromptDialog();
+      } else if (target.id === 'cg-manage-prompts') {
+        this.showCategoryManagementDialog();
       // Toggle all categories now handled by setupToggleAllListener method
       } else if (action === 'toggle-category') {
         // Note: Category toggles are now handled by direct listeners in setupCategoryToggleListeners()
@@ -1080,7 +1097,6 @@ class PromptManager {
                   }
                   <option value="__new__">➕ Create New Category...</option>
                 </select>
-                <button type="button" class="cg-manage-categories-btn" id="cg-manage-categories" title="Manage categories">⚙️</button>
               </div>
               <div class="cg-new-category-form" id="cg-new-category-form" style="display: none;">
                 <input type="text" class="cg-form-input" id="cg-new-category-name" placeholder="Category name">
@@ -1152,7 +1168,6 @@ class PromptManager {
   setupCategoryManagementHandlers(modal) {
     const categorySelect = modal.querySelector('#cg-category-select');
     const newCategoryForm = modal.querySelector('#cg-new-category-form');
-    const manageCategoriesBtn = modal.querySelector('#cg-manage-categories');
     const createCategoryBtn = modal.querySelector('#cg-create-category');
     const cancelCategoryBtn = modal.querySelector('#cg-cancel-category');
     const iconPickerContainer = modal.querySelector('#cg-new-category-icon-picker');
@@ -1193,6 +1208,13 @@ class PromptManager {
       try {
         // Add new category
         this.categories.push({ name, icon, color });
+        
+        // Add to category order so it shows up in the interface
+        if (!this.categoryOrder.includes(name)) {
+          this.categoryOrder.push(name);
+          await this.saveCategoryOrder();
+        }
+        
         await this.saveCategories();
 
         // Update the select options
@@ -1223,10 +1245,6 @@ class PromptManager {
       modal.querySelector('#cg-new-category-name').value = '';
     });
 
-    // Handle manage categories
-    manageCategoriesBtn?.addEventListener('click', () => {
-      this.showCategoryManagementDialog();
-    });
   }
 
   showCategoryManagementDialog() {
@@ -1257,6 +1275,8 @@ class PromptManager {
               </div>
             `).join('')}
           </div>
+        </div>
+        <div class="cg-modal-footer">
           <div class="cg-form-actions">
             <button type="button" class="cg-btn cg-btn-secondary" data-action="close-category-modal">Close</button>
           </div>
@@ -1571,7 +1591,12 @@ class PromptManager {
       <div class="cg-modal-content cg-guided-modal-content">
         <div class="cg-modal-header">
           <h3 class="cg-modal-title">Complete Your Prompt: ${prompt.title}</h3>
-          <button class="cg-modal-close" data-action="close-variable-modal">×</button>
+          <div class="cg-header-controls">
+            <button class="cg-animation-toggle" id="cg-animation-toggle" title="Toggle animations">
+              ✨
+            </button>
+            <button class="cg-modal-close" data-action="close-variable-modal">×</button>
+          </div>
         </div>
         <div class="cg-modal-body cg-guided-body">
           <!-- Two Column Layout -->
@@ -1632,6 +1657,18 @@ class PromptManager {
     const form = modal.querySelector('#cg-variable-form');
     const livePreview = modal.querySelector('#cg-live-preview');
     
+    // Setup animation toggle
+    const animationToggle = modal.querySelector('#cg-animation-toggle');
+    let animationsEnabled = true;
+    
+    animationToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      animationsEnabled = !animationsEnabled;
+      animationToggle.textContent = animationsEnabled ? '✨' : '⚡';
+      animationToggle.title = animationsEnabled ? 'Disable animations' : 'Enable animations';
+      modal.classList.toggle('cg-animations-disabled', !animationsEnabled);
+    });
+
     // Setup live preview updates
     form.addEventListener('input', (e) => {
       this.updateLivePreview(prompt.content, variables, form, livePreview);
@@ -1719,17 +1756,20 @@ class PromptManager {
   }
 
   createPromptPreview(content, variables) {
-    let preview = content;
+    let preview = content.trim();
     variables.forEach(variable => {
       const varName = variable.replace(/{{|}}/g, '');
-      const underlined = `<span class="cg-variable-placeholder" data-variable="${varName}">____${varName}____</span>`;
+      const underlined = `<span class="cg-variable-placeholder" data-variable="${varName}">${varName}</span>`;
       preview = preview.replace(new RegExp(variable.replace(/[{}]/g, '\\$&'), 'g'), underlined);
     });
+    // Preserve line breaks and spacing
+    preview = preview.replace(/\n/g, '<br>');
+    preview = preview.replace(/  /g, '&nbsp;&nbsp;');
     return preview;
   }
 
   updateLivePreview(originalContent, variables, form, livePreviewElement) {
-    let previewContent = originalContent;
+    let previewContent = originalContent.trim();
     const formData = new FormData(form);
     
     variables.forEach(variable => {
@@ -1743,10 +1783,14 @@ class PromptManager {
       } else {
         previewContent = previewContent.replace(
           new RegExp(variable.replace(/[{}]/g, '\\$&'), 'g'), 
-          `<span class="cg-empty-variable">____${varName}____</span>`
+          `<span class="cg-empty-variable">${varName}</span>`
         );
       }
     });
+    
+    // Preserve line breaks and spacing
+    previewContent = previewContent.replace(/\n/g, '<br>');
+    previewContent = previewContent.replace(/  /g, '&nbsp;&nbsp;');
     
     livePreviewElement.innerHTML = previewContent;
   }
@@ -1864,6 +1908,26 @@ class PromptManager {
     return picker;
   }
 
+  positionEmojiDropdown(button, dropdown) {
+    const buttonRect = button.getBoundingClientRect();
+    const dropdownHeight = 400; // max-height from CSS
+    const viewportHeight = window.innerHeight;
+    const spaceBelow = viewportHeight - buttonRect.bottom;
+    const spaceAbove = buttonRect.top;
+    
+    // Position horizontally
+    dropdown.style.left = `${buttonRect.left}px`;
+    
+    // Position vertically - flip to top if not enough space below
+    if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+      dropdown.style.top = `${buttonRect.top - dropdownHeight - 8}px`;
+      dropdown.classList.add('cg-dropdown-flipped');
+    } else {
+      dropdown.style.top = `${buttonRect.bottom + 8}px`;
+      dropdown.classList.remove('cg-dropdown-flipped');
+    }
+  }
+
   setupEmojiPickerEvents(picker) {
     const button = picker.querySelector('.cg-emoji-button');
     const dropdown = picker.querySelector('.cg-emoji-dropdown');
@@ -1881,6 +1945,7 @@ class PromptManager {
       dropdown.classList.toggle('show', isOpen);
       
       if (isOpen) {
+        this.positionEmojiDropdown(button, dropdown);
         this.renderEmojiGrid(grid, currentCategory);
         searchInput.focus();
         // Close other open pickers
@@ -1897,6 +1962,15 @@ class PromptManager {
       if (!picker.contains(e.target)) {
         dropdown.classList.remove('show');
         isOpen = false;
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        dropdown.classList.remove('show');
+        isOpen = false;
+        button.focus();
       }
     });
 

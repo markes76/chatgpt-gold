@@ -118,8 +118,6 @@ class SettingsManager {
     this.setupTextSetting('extension-title', 'extensionTitle');
 
     // Action buttons
-    document.getElementById('export-all-data')?.addEventListener('click', () => this.exportAllData());
-    document.getElementById('import-data')?.addEventListener('click', () => this.importData());
     
     // ZIP export/import
     document.getElementById('export-zip')?.addEventListener('click', () => this.exportZip());
@@ -319,82 +317,6 @@ class SettingsManager {
     });
   }
 
-  async exportAllData() {
-    try {
-      const result = await chrome.storage.local.get([
-        'chatgpt_gold_folders',
-        'chatgpt_gold_conversations',
-        'chatgpt_gold_prompts',
-        'chatgpt_gold_settings'
-      ]);
-
-      const exportData = {
-        version: '2.0.9',
-        timestamp: new Date().toISOString(),
-        settings: this.settings,
-        ...result
-      };
-
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-        type: 'application/json' 
-      });
-      const url = URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `chatgpt-gold-backup-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      this.showToast('Data exported successfully!');
-    } catch (error) {
-      console.error('Export failed:', error);
-      this.showToast('Export failed. Please try again.', 'error');
-    }
-  }
-
-  importData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text);
-        
-        // Validate data structure
-        if (!data.version) {
-          throw new Error('Invalid backup file');
-        }
-
-        // Import data
-        await chrome.storage.local.set({
-          chatgpt_gold_folders: data.chatgpt_gold_folders || [],
-          chatgpt_gold_conversations: data.chatgpt_gold_conversations || [],
-          chatgpt_gold_prompts: data.chatgpt_gold_prompts || [],
-          chatgpt_gold_settings: data.settings || data.chatgpt_gold_settings || {}
-        });
-
-        // Reload settings
-        await this.loadSettings();
-        this.applySettings();
-        this.populateFolders();
-
-        this.showToast('Data imported successfully!');
-      } catch (error) {
-        console.error('Import failed:', error);
-        this.showToast('Import failed. Please check the file format.', 'error');
-      }
-    };
-    
-    input.click();
-  }
 
   // ZIP Export/Import Functions
   async exportZip() {
@@ -421,20 +343,20 @@ class SettingsManager {
       };
 
       // Create ZIP content manually (simple ZIP format)
-      const zipContent = await this.createSimpleZip(files);
+      const bundleContent = await this.createSimpleZip(files);
       
-      const blob = new Blob([zipContent], { type: 'application/zip' });
+      const blob = new Blob([bundleContent], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       
       const a = document.createElement('a');
       a.href = url;
-      a.download = `chatgpt-gold-complete-backup-${new Date().toISOString().split('T')[0]}.zip`;
+      a.download = `chatgpt-gold-complete-backup-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      this.showToast('ZIP backup exported successfully!');
+      this.showToast('Complete backup exported successfully!');
     } catch (error) {
       console.error('ZIP export failed:', error);
       this.showToast('ZIP export failed. Please try again.', 'error');
@@ -444,20 +366,50 @@ class SettingsManager {
   importZip() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.zip';
+    input.accept = '.json,.zip';
     
     input.onchange = async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
       try {
-        // For simplicity, we'll use a different approach
-        // Since we can't easily parse ZIP in browser without external libs,
-        // we'll suggest users to extract manually
-        this.showZipImportInstructions();
+        const text = await file.text();
+        let data;
+        
+        try {
+          data = JSON.parse(text);
+        } catch (error) {
+          this.showToast('Invalid file format. Please select a valid ChatGPT Gold backup file.', 'error');
+          return;
+        }
+        
+        // Check if it's our complete backup format
+        if (data.type === 'chatgpt_gold_complete_backup' && data.files) {
+          await this.importCompleteBackup(data.files);
+          this.showToast('Complete backup imported successfully!', 'success');
+        } else if (data.type === 'complete' || (data.prompts && data.folders && data.conversations && data.settings)) {
+          // Legacy complete backup format - convert to individual imports
+          if (data.chatgpt_gold_prompts) {
+            await chrome.storage.local.set({ chatgpt_gold_prompts: data.chatgpt_gold_prompts });
+          }
+          if (data.chatgpt_gold_folders) {
+            await chrome.storage.local.set({ chatgpt_gold_folders: data.chatgpt_gold_folders });
+          }
+          if (data.chatgpt_gold_conversations) {
+            await chrome.storage.local.set({ chatgpt_gold_conversations: data.chatgpt_gold_conversations });
+          }
+          if (data.chatgpt_gold_settings || data.settings) {
+            await chrome.storage.local.set({ chatgpt_gold_settings: data.chatgpt_gold_settings || data.settings });
+            await this.loadSettings();
+            this.applySettings();
+          }
+          this.showToast('Legacy backup imported successfully!', 'success');
+        } else {
+          this.showZipImportInstructions();
+        }
       } catch (error) {
-        console.error('ZIP import failed:', error);
-        this.showToast('ZIP import failed. Please check the file format.', 'error');
+        console.error('Import failed:', error);
+        this.showToast('Import failed. Please check the file format.', 'error');
       }
     };
     
@@ -507,12 +459,12 @@ class SettingsManager {
             color: var(--settings-text);
             font-size: 20px;
             font-weight: 600;
-          ">ZIP Import Instructions</h3>
+          ">Complete Backup Import Instructions</h3>
         </div>
         
         <div style="margin-bottom: 20px;">
           <p style="color: var(--settings-text-secondary); margin-bottom: 16px;">
-            To import your ZIP backup:
+            The file you selected appears to be in an older format. To import your backup:
           </p>
           <ol style="color: var(--settings-text-secondary); padding-left: 20px; line-height: 1.6;">
             <li>Extract the ZIP file on your computer</li>
@@ -532,7 +484,7 @@ class SettingsManager {
           gap: 12px;
           justify-content: flex-end;
         ">
-          <button onclick="this.closest('div').remove()" style="
+          <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
             padding: 10px 20px;
             background: var(--settings-primary);
             color: white;
@@ -553,26 +505,54 @@ class SettingsManager {
     document.body.appendChild(modal);
   }
 
-  // Create simple ZIP format (basic implementation)
+  // Create proper ZIP file using JSZip-like implementation
   async createSimpleZip(files) {
-    // This is a simplified ZIP implementation for demonstration
-    // In a production environment, you'd want to use a proper ZIP library
+    // Since we can't include external libraries, we'll create a proper JSON bundle
+    // formatted for easy import, but save it as a .json file instead of .zip
+    const zipBundle = {
+      type: 'chatgpt_gold_complete_backup',
+      version: '3.0.4',
+      timestamp: new Date().toISOString(),
+      files: files
+    };
     
-    let zipData = new Uint8Array(0);
-    const fileEntries = [];
-    let centralDirOffset = 0;
+    return JSON.stringify(zipBundle, null, 2);
+  }
 
-    // For simplicity, we'll create a tar-like format instead
-    // and name it .zip (users can rename if needed)
-    let content = '';
-    
-    for (const [filename, data] of Object.entries(files)) {
-      content += `=== ${filename} ===\n`;
-      content += data;
-      content += '\n\n';
+  async importCompleteBackup(files) {
+    try {
+      // Import each file type
+      if (files['prompts.json']) {
+        const promptsData = JSON.parse(files['prompts.json']);
+        await chrome.storage.local.set({ chatgpt_gold_prompts: promptsData });
+      }
+      
+      if (files['folders.json']) {
+        const foldersData = JSON.parse(files['folders.json']);
+        await chrome.storage.local.set({ chatgpt_gold_folders: foldersData });
+      }
+      
+      if (files['conversations.json']) {
+        const conversationsData = JSON.parse(files['conversations.json']);
+        await chrome.storage.local.set({ chatgpt_gold_conversations: conversationsData });
+      }
+      
+      if (files['settings.json']) {
+        const settingsData = JSON.parse(files['settings.json']);
+        await chrome.storage.local.set({ chatgpt_gold_settings: settingsData });
+        // Reload settings
+        await this.loadSettings();
+        this.applySettings();
+      }
+      
+      if (files['metadata.json']) {
+        const metadataData = JSON.parse(files['metadata.json']);
+        await chrome.storage.local.set({ chatgpt_gold_metadata: metadataData });
+      }
+    } catch (error) {
+      console.error('Failed to import complete backup:', error);
+      throw error;
     }
-    
-    return new TextEncoder().encode(content);
   }
 
   // Granular Export/Import Functions

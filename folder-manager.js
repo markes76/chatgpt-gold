@@ -775,10 +775,19 @@ class FolderManager {
 
     let selectedFolderId = conversation.folderId;
     modal.querySelectorAll('.cg-folder-option').forEach(option => {
+      if (!option) return;
       option.addEventListener('click', () => {
-        modal.querySelectorAll('.cg-folder-option').forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        selectedFolderId = option.dataset.folderId || null;
+        if (!modal || !option) return;
+        const allOptions = modal.querySelectorAll('.cg-folder-option');
+        if (allOptions) {
+          allOptions.forEach(opt => {
+            if (opt) opt.classList.remove('selected');
+          });
+        }
+        if (option) {
+          option.classList.add('selected');
+          selectedFolderId = option.dataset?.folderId || null;
+        }
       });
     });
 
@@ -834,10 +843,19 @@ class FolderManager {
 
     // Folder selection
     modal.querySelectorAll('.cg-folder-option').forEach(option => {
+      if (!option) return;
       option.addEventListener('click', () => {
-        modal.querySelectorAll('.cg-folder-option').forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-        selectedFolderId = option.dataset.folderId;
+        if (!modal || !option) return;
+        const allOptions = modal.querySelectorAll('.cg-folder-option');
+        if (allOptions) {
+          allOptions.forEach(opt => {
+            if (opt) opt.classList.remove('selected');
+          });
+        }
+        if (option) {
+          option.classList.add('selected');
+          selectedFolderId = option.dataset?.folderId;
+        }
       });
     });
 
@@ -1060,9 +1078,10 @@ class FolderManager {
     this.setupSortEventListeners(container);
 
     container.addEventListener('click', async (e) => {
-      const action = e.target.dataset.action;
-      const folderId = e.target.dataset.folderId;
-      const conversationId = e.target.dataset.conversationId;
+      if (!e.target) return;
+      const action = e.target.dataset?.action;
+      const folderId = e.target.dataset?.folderId;
+      const conversationId = e.target.dataset?.conversationId;
 
       switch (action) {
         case 'toggle-folder':
@@ -1444,8 +1463,8 @@ class FolderManager {
       const option = e.target.closest('.cg-folder-option');
       const action = e.target.closest('[data-action]');
       
-      if (option && action?.dataset.action === 'move') {
-        const newFolderId = option.dataset.folderId || null;
+      if (option && action?.dataset?.action === 'move') {
+        const newFolderId = option.dataset?.folderId || null;
         try {
           await this.moveConversationToFolder(conversationId, newFolderId);
           dropdown.remove();
@@ -1790,8 +1809,8 @@ class FolderManager {
     this.dragState.isDragging = true;
     
     if (isDragFolder) {
-      const folderId = dragHandle.dataset.folderId;
-      const folderIndex = parseInt(dragHandle.dataset.folderIndex);
+      const folderId = dragHandle.dataset?.folderId;
+      const folderIndex = parseInt(dragHandle.dataset?.folderIndex || '0');
       this.dragState.draggedElement = document.querySelector(`[data-folder-id="${folderId}"]`);
       this.dragState.draggedIndex = folderIndex;
       this.dragState.dragType = 'folder';
@@ -1956,7 +1975,7 @@ class FolderManager {
 
   async reorderFolder(dragData, dropTarget) {
     const draggedFolderId = dragData.id;
-    const targetFolderId = dropTarget.dataset.folderId;
+    const targetFolderId = dropTarget.dataset?.folderId;
     
     if (draggedFolderId === targetFolderId) return;
     
@@ -1983,7 +2002,7 @@ class FolderManager {
     
     if (dropTarget.classList.contains('cg-folder-item')) {
       // Moving to a different folder
-      const targetFolderId = dropTarget.dataset.folderId || null;
+      const targetFolderId = dropTarget.dataset?.folderId || null;
       await this.moveConversationToFolder(draggedConversationId, targetFolderId);
     } else if (dropTarget.classList.contains('cg-conversation-item')) {
       // Reordering within the same folder

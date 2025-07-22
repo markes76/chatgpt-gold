@@ -163,6 +163,13 @@ class ChatGPTGold {
       e.stopPropagation();
       console.log('ChatGPT Gold: Settings button clicked');
       
+      // Check if extension context is still valid before sending messages
+      if (!chrome.runtime?.id) {
+        console.log('ChatGPT Gold: Extension context invalidated - page needs refresh');
+        this.showToast('Extension needs refresh. Please reload the page.');
+        return;
+      }
+
       try {
         chrome.runtime.sendMessage({ action: 'openSettings' }, (response) => {
           if (chrome.runtime.lastError) {
@@ -173,7 +180,7 @@ class ChatGPTGold {
                 error.includes('Extension context invalidated') ||
                 error.includes('Could not establish connection')) {
               console.log('ChatGPT Gold: Background script unavailable');
-              this.showToast('Settings page unavailable. Please try using the extension popup or reload the page.');
+              this.showToast('Extension reloaded. Please refresh the page to reconnect.');
             } else {
               console.error('ChatGPT Gold: Failed to open settings:', error);
               this.showToast('Could not open settings page. Please try again.');
@@ -183,8 +190,11 @@ class ChatGPTGold {
           }
         });
       } catch (error) {
-        console.error('ChatGPT Gold: Error sending settings message:', error);
-        this.showToast('Settings unavailable. Please try refreshing the page.');
+        // Only log this if it's not a context invalidation error
+        if (!error.message?.includes('Extension context invalidated')) {
+          console.error('ChatGPT Gold: Error sending settings message:', error);
+        }
+        this.showToast('Extension needs refresh. Please reload the page.');
       }
     });
 
@@ -840,6 +850,12 @@ class ChatGPTGold {
 
   async loadSearchData() {
     try {
+      // Check if extension context is still valid
+      if (!chrome.runtime?.id) {
+        console.log('ChatGPT Gold: Extension context invalidated during search data load');
+        return;
+      }
+
       const response = await chrome.runtime.sendMessage({
         type: 'STORAGE_GET',
         keys: [
@@ -858,7 +874,11 @@ class ChatGPTGold {
       };
 
     } catch (error) {
-      console.warn('ChatGPT Gold: Background script unavailable for search data, using fallback approach:', error);
+      if (error.message?.includes('Extension context invalidated')) {
+        console.log('ChatGPT Gold: Extension context invalidated during search data load');
+      } else {
+        console.warn('ChatGPT Gold: Background script unavailable for search data, using fallback approach:', error);
+      }
     }
 
     // Use folder manager's data if available
@@ -1326,6 +1346,12 @@ class ChatGPTGold {
 
   async loadThemeSettings() {
     try {
+      // Check if extension context is still valid
+      if (!chrome.runtime?.id) {
+        console.log('ChatGPT Gold: Extension context invalidated during theme settings load');
+        return;
+      }
+
       const response = await chrome.runtime.sendMessage({
         type: 'STORAGE_GET',
         keys: ['chatgpt_gold_settings']
@@ -1341,7 +1367,11 @@ class ChatGPTGold {
         }, 500); // Small delay to ensure sidebar is created
       }
     } catch (error) {
-      console.error('Failed to load theme settings:', error);
+      if (error.message?.includes('Extension context invalidated')) {
+        console.log('ChatGPT Gold: Extension context invalidated during theme settings load');
+      } else {
+        console.error('Failed to load theme settings:', error);
+      }
     }
   }
 

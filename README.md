@@ -2,7 +2,7 @@
 
 Transform ChatGPT into a powerful, organized AI workspace with smart conversation organization, advanced prompt libraries, and enhanced search capabilities. Features a draggable sidebar with folder management, quick-access prompt templates, and seamless integration with ChatGPT's native interface.
 
-![ChatGPT Gold Demo](https://img.shields.io/badge/Version-2.0.0-brightgreen) ![Chrome Extension](https://img.shields.io/badge/Platform-Chrome%20Extension-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
+![ChatGPT Gold Demo](https://img.shields.io/badge/Version-3.0.5-brightgreen) ![Chrome Extension](https://img.shields.io/badge/Platform-Chrome%20Extension-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## ✨ Features
 
@@ -11,11 +11,13 @@ Transform ChatGPT into a powerful, organized AI workspace with smart conversatio
 - **Visual Indicators**: See folder assignments directly in ChatGPT's sidebar
 
 ### ⚡ **Advanced Prompt Library**
-- **Custom Prompts**: Create, edit, and organize your prompt collection
-- **Categories**: Organize prompts by Development, Writing, Analysis, etc.
+- **Custom Prompts**: Create, edit, and organize your prompt collection with live preview
+- **Smart Categories**: Organize prompts by custom categories with icons and colors
 - **Favorites System**: Star frequently used prompts for quick access
 - **Quick Access**: Use `Ctrl+.` (or `Cmd+.` on Mac) for instant prompt dropdown
-- **Template Support**: Use placeholders for dynamic content
+- **Variable Support**: Dynamic prompts with highlighted variable placeholders
+- **Category Management**: Full CRUD operations for categories with visual organization
+- **Modern UI**: Glassmorphism design for prompt interface with enhanced visual appeal
 
 ### 🔍 **Hybrid Search Enhancement**
 - **Native Search Enhancement**: Injects extension results into ChatGPT's Cmd+K search
@@ -34,9 +36,18 @@ Transform ChatGPT into a powerful, organized AI workspace with smart conversatio
 
 ### 🎨 **Customization Options**
 - **Flexible Sidebar**: Draggable toggle, adjustable width
-- **Theme Support**: Automatic dark/light mode detection
-- **Personalization**: Custom folder colors and icons
-- **Persistent Settings**: All preferences saved locally
+- **Theme Support**: Auto/Light/Dark modes with live switching (no refresh required)
+- **Color Customization**: 12 pre-defined glass themes + custom color picker
+- **Personalization**: Custom folder colors and icons, category management
+- **Settings Management**: Comprehensive preferences with backup/restore
+- **Professional Design**: Clean interface optimized for productivity
+
+### 💾 **Backup & Data Management**
+- **Complete Backup**: Export all data (prompts, folders, conversations, settings) in one file
+- **Granular Export/Import**: Export specific data types (prompts only, folders only, settings only)
+- **Data Portability**: JSON format for easy sharing and migration
+- **Settings Backup**: Preserve themes, preferences, and customizations
+- **Zero Data Loss**: Robust error handling and validation during import/export
 
 ## 🚀 Quick Start
 
@@ -149,7 +160,9 @@ Please provide specific suggestions with examples.
 - **Background Service Worker**: Handles Chrome storage, message passing, and persistence
 - **Modular Design**: Separate managers for folders, prompts, search, and hotkeys
 - **Hybrid Storage**: Chrome extension storage with localStorage fallback for reliability
-- **Error Recovery**: Extensive retry logic for "Extension context invalidated" scenarios
+- **Error Recovery**: Robust handling for "Extension context invalidated" scenarios
+- **Modern UI Framework**: Glassmorphism design system with responsive layout
+- **Performance Optimized**: Clean code architecture with minimal resource usage
 
 ### File Structure
 ```
@@ -204,6 +217,25 @@ chatgpt-gold/
   createdAt: 1640995200000,
   updatedAt: 1640995200000
 }
+
+// Categories
+{
+  name: 'Development',
+  icon: '💻',
+  color: '#3b82f6',
+  expanded: true
+}
+
+// Settings
+{
+  theme: 'auto', // 'auto' | 'light' | 'dark'
+  primaryColor: '#10a37f',
+  extensionTitle: 'ChatGPT Gold',
+  sidebarDefaultOpen: true,
+  sidebarWidth: 350,
+  showNotifications: true,
+  notificationDuration: 3
+}
 ```
 
 ## 🔒 Privacy & Security
@@ -240,10 +272,11 @@ chatgpt-gold/
 - Check if extension is enabled in `chrome://extensions/`
 
 #### Storage/Data Issues
-- **"Extension context invalidated"**: Refresh the ChatGPT page
+- **"Extension context invalidated"**: The page will automatically show a refresh message - simply reload the page
 - **Data not saving**: Extension automatically retries with fallback storage
-- **Settings lost**: Check Chrome storage usage isn't at limit
+- **Settings lost**: Check Chrome storage usage isn't at limit, use backup/restore feature
 - **Performance issues**: Clear browser cache and restart Chrome
+- **Import/Export problems**: Use the Options page (chrome://extensions/ → ChatGPT Gold → Options) for all backup operations
 
 #### Search Not Working
 - Try refreshing the ChatGPT page
@@ -292,19 +325,47 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ **Search Enhancement**: Both native integration and advanced overlay
 - ✅ **Keyboard Shortcuts**: Comprehensive hotkey system
 - ✅ **Settings Management**: Persistent preferences and customization
+- ✅ **Export/Import**: Complete backup and restore functionality
+- ✅ **Theme System**: Auto/Light/Dark modes with custom colors
+- ✅ **Category Management**: Full CRUD operations for prompt categories
+- ✅ **Modern UI**: Glassmorphism design system (prompt library)
+- ✅ **Error Recovery**: Robust handling for extension context invalidation
 
 ### In Development 🚧
-- 🚧 **Response Tools**: Copy, save, and analyze response features (temporarily disabled)
-- 🚧 **Performance Optimization**: Reducing storage retry complexity
+- 🚧 **Performance Optimization**: Further UI performance improvements
 - 🚧 **Code Cleanup**: Removing experimental and test files
+- 🚧 **Extended Themes**: Full glassmorphism throughout (currently prompt library only)
 
 ### Planned 🗺️
-- 🗺️ **Export/Import**: Backup and restore functionality
 - 🗺️ **Cloud Sync**: Optional cloud synchronization
-- 🗺️ **Custom Themes**: Full theme customization beyond current options
 - 🗺️ **Team Sharing**: Share prompts and folders with team members
 - 🗺️ **Advanced Analytics**: Usage statistics and insights
 - 🗺️ **API Integration**: Connect with external tools and services
+- 🗺️ **Response Tools**: Enhanced response management features
+
+## 📋 Changelog
+
+### Version 3.0.5 (Latest)
+- 🔧 **Fixed**: Extension context invalidation errors with better error handling
+- 🔧 **Fixed**: Broken button styling after glassmorphism cleanup
+- 💾 **Fixed**: Complete backup/restore system overhaul (ZIP → JSON format)
+- 🔧 **Fixed**: Modal close buttons and emoji picker positioning
+- 🎨 **Improved**: Removed duplicate backup sections for cleaner UI
+- 🎨 **Improved**: Dark mode compatibility (glassmorphism disabled for readability)
+
+### Version 3.0.2-3.0.4
+- 🎨 **Major**: Glassmorphism design system implementation (prompt library)
+- 🔧 **Fixed**: Category management bugs (Work category display)
+- 🎨 **Enhanced**: Emoji picker with 400+ emojis and search functionality
+- 🔧 **Fixed**: Modal sizing and positioning issues
+- 💾 **Enhanced**: Backup/restore with granular options
+- 🎨 **Improved**: UI consistency between conversation and prompt libraries
+
+### Version 3.0.0-3.0.1
+- 🎨 **Major**: Complete UI/UX overhaul for professional appearance
+- 🔧 **Fixed**: Prompt library interface and live preview improvements
+- 🎨 **Enhanced**: Color picker and theme customization
+- 🔧 **Fixed**: Various modal and dropdown positioning issues
 
 ## ⭐ Acknowledgments
 
